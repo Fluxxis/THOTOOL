@@ -1,0 +1,1937 @@
+[
+  {
+    "name": "Telegram",
+    "pattern": "https://t.me/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Telegram (old)",
+    "pattern": "https://telegram.me/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Telegra.ph",
+    "pattern": "https://telegra.ph/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "X (Twitter)",
+    "pattern": "https://x.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Twitter",
+    "pattern": "https://twitter.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Instagram",
+    "pattern": "https://www.instagram.com/{u}/",
+    "kind": "social"
+  },
+  {
+    "name": "Facebook",
+    "pattern": "https://www.facebook.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Threads",
+    "pattern": "https://www.threads.net/@{u}",
+    "kind": "social"
+  },
+  {
+    "name": "TikTok",
+    "pattern": "https://www.tiktok.com/@{u}",
+    "kind": "social"
+  },
+  {
+    "name": "YouTube",
+    "pattern": "https://www.youtube.com/@{u}",
+    "kind": "social"
+  },
+  {
+    "name": "YouTube (user)",
+    "pattern": "https://www.youtube.com/user/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Twitch",
+    "pattern": "https://www.twitch.tv/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Kick",
+    "pattern": "https://kick.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Rumble",
+    "pattern": "https://rumble.com/user/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Vimeo",
+    "pattern": "https://vimeo.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Dailymotion",
+    "pattern": "https://www.dailymotion.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Reddit",
+    "pattern": "https://www.reddit.com/user/{u}/",
+    "kind": "social"
+  },
+  {
+    "name": "Quora",
+    "pattern": "https://www.quora.com/profile/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Medium",
+    "pattern": "https://medium.com/@{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Substack",
+    "pattern": "https://{u}.substack.com",
+    "kind": "social"
+  },
+  {
+    "name": "Tumblr",
+    "pattern": "https://{u}.tumblr.com",
+    "kind": "social"
+  },
+  {
+    "name": "Pinterest",
+    "pattern": "https://www.pinterest.com/{u}/",
+    "kind": "social"
+  },
+  {
+    "name": "LinkedIn",
+    "pattern": "https://www.linkedin.com/in/{u}/",
+    "kind": "social"
+  },
+  {
+    "name": "VK",
+    "pattern": "https://vk.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "OK.ru",
+    "pattern": "https://ok.ru/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Habr",
+    "pattern": "https://habr.com/ru/users/{u}/",
+    "kind": "social"
+  },
+  {
+    "name": "Pikabu",
+    "pattern": "https://pikabu.ru/@{u}",
+    "kind": "social"
+  },
+  {
+    "name": "9GAG",
+    "pattern": "https://9gag.com/u/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Fandom",
+    "pattern": "https://www.fandom.com/u/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Steam Discussions (community)",
+    "pattern": "https://steamcommunity.com/id/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Steam (profiles by vanity)",
+    "pattern": "https://steamcommunity.com/id/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Discord (invite vanity)",
+    "pattern": "https://discord.gg/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Discord (domains)",
+    "pattern": "https://discord.com/users/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Mastodon.social",
+    "pattern": "https://mastodon.social/@{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Bluesky",
+    "pattern": "https://bsky.app/profile/{u}.bsky.social",
+    "kind": "social"
+  },
+  {
+    "name": "Truth Social",
+    "pattern": "https://truthsocial.com/@{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Gab",
+    "pattern": "https://gab.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Parler",
+    "pattern": "https://parler.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Stack Exchange network",
+    "pattern": "https://stackexchange.com/users/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Stack Overflow",
+    "pattern": "https://stackoverflow.com/users/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Server Fault",
+    "pattern": "https://serverfault.com/users/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Super User",
+    "pattern": "https://superuser.com/users/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Ask Ubuntu",
+    "pattern": "https://askubuntu.com/users/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Stack Overflow (RU)",
+    "pattern": "https://ru.stackoverflow.com/users/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Dev.to",
+    "pattern": "https://dev.to/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Hashnode",
+    "pattern": "https://hashnode.com/@{u}",
+    "kind": "social"
+  },
+  {
+    "name": "News Y Combinator",
+    "pattern": "https://news.ycombinator.com/user?id={u}",
+    "kind": "social"
+  },
+  {
+    "name": "Lobsters",
+    "pattern": "https://lobste.rs/u/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Product Hunt",
+    "pattern": "https://www.producthunt.com/@{u}",
+    "kind": "social"
+  },
+  {
+    "name": "GitBook",
+    "pattern": "https://{u}.gitbook.io",
+    "kind": "social"
+  },
+  {
+    "name": "Notion (site)",
+    "pattern": "https://{u}.notion.site",
+    "kind": "social"
+  },
+  {
+    "name": "Carrd",
+    "pattern": "https://{u}.carrd.co",
+    "kind": "social"
+  },
+  {
+    "name": "Linktree",
+    "pattern": "https://linktr.ee/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Beacons",
+    "pattern": "https://beacons.ai/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "About.me",
+    "pattern": "https://about.me/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Taplink",
+    "pattern": "https://taplink.cc/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Solo.to",
+    "pattern": "https://solo.to/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Lnk.Bio",
+    "pattern": "https://lnk.bio/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Bio.site",
+    "pattern": "https://bio.site/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Ko-fi",
+    "pattern": "https://ko-fi.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Buy Me a Coffee",
+    "pattern": "https://www.buymeacoffee.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Patreon",
+    "pattern": "https://www.patreon.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Boosty",
+    "pattern": "https://boosty.to/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "SoundCloud",
+    "pattern": "https://soundcloud.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Bandcamp",
+    "pattern": "https://{u}.bandcamp.com",
+    "kind": "social"
+  },
+  {
+    "name": "Mixcloud",
+    "pattern": "https://www.mixcloud.com/{u}/",
+    "kind": "social"
+  },
+  {
+    "name": "Last.fm",
+    "pattern": "https://www.last.fm/user/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Goodreads",
+    "pattern": "https://www.goodreads.com/user/show/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Wattpad",
+    "pattern": "https://www.wattpad.com/user/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "AO3",
+    "pattern": "https://archiveofourown.org/users/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "FanFiction",
+    "pattern": "https://www.fanfiction.net/u/{u}/",
+    "kind": "social"
+  },
+  {
+    "name": "MyAnimeList",
+    "pattern": "https://myanimelist.net/profile/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "AniList",
+    "pattern": "https://anilist.co/user/{u}/",
+    "kind": "social"
+  },
+  {
+    "name": "Kitsu",
+    "pattern": "https://kitsu.io/users/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Crunchyroll",
+    "pattern": "https://www.crunchyroll.com/user/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Behance",
+    "pattern": "https://www.behance.net/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Dribbble",
+    "pattern": "https://dribbble.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "DeviantArt",
+    "pattern": "https://www.deviantart.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "ArtStation",
+    "pattern": "https://www.artstation.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Pixiv",
+    "pattern": "https://www.pixiv.net/users/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Sketchfab",
+    "pattern": "https://sketchfab.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Flickr",
+    "pattern": "https://www.flickr.com/people/{u}/",
+    "kind": "social"
+  },
+  {
+    "name": "500px",
+    "pattern": "https://500px.com/p/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Imgur",
+    "pattern": "https://imgur.com/user/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Gumroad",
+    "pattern": "https://{u}.gumroad.com",
+    "kind": "social"
+  },
+  {
+    "name": "Etsy",
+    "pattern": "https://www.etsy.com/people/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "eBay",
+    "pattern": "https://www.ebay.com/usr/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Fiverr",
+    "pattern": "https://www.fiverr.com/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Upwork",
+    "pattern": "https://www.upwork.com/freelancers/~{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Freelancer",
+    "pattern": "https://www.freelancer.com/u/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "PeoplePerHour",
+    "pattern": "https://www.peopleperhour.com/freelancer/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "Guru",
+    "pattern": "https://www.guru.com/freelancers/{u}",
+    "kind": "social"
+  },
+  {
+    "name": "GitHub",
+    "pattern": "https://github.com/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "GitHub Pages",
+    "pattern": "https://{u}.github.io",
+    "kind": "dev"
+  },
+  {
+    "name": "GitHub Gist",
+    "pattern": "https://gist.github.com/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "GitLab",
+    "pattern": "https://gitlab.com/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Bitbucket",
+    "pattern": "https://bitbucket.org/{u}/",
+    "kind": "dev"
+  },
+  {
+    "name": "Codeberg",
+    "pattern": "https://codeberg.org/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "SourceForge",
+    "pattern": "https://sourceforge.net/u/{u}/profile/",
+    "kind": "dev"
+  },
+  {
+    "name": "Launchpad",
+    "pattern": "https://launchpad.net/~{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "NPM",
+    "pattern": "https://www.npmjs.com/~{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "PyPI",
+    "pattern": "https://pypi.org/user/{u}/",
+    "kind": "dev"
+  },
+  {
+    "name": "RubyGems",
+    "pattern": "https://rubygems.org/profiles/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Packagist",
+    "pattern": "https://packagist.org/users/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Crates.io",
+    "pattern": "https://crates.io/users/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "NuGet",
+    "pattern": "https://www.nuget.org/profiles/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Docker Hub",
+    "pattern": "https://hub.docker.com/u/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Read the Docs",
+    "pattern": "https://readthedocs.org/profiles/{u}/",
+    "kind": "dev"
+  },
+  {
+    "name": "CodePen",
+    "pattern": "https://codepen.io/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "JSFiddle",
+    "pattern": "https://jsfiddle.net/user/{u}/",
+    "kind": "dev"
+  },
+  {
+    "name": "Replit",
+    "pattern": "https://replit.com/@{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Glitch",
+    "pattern": "https://glitch.com/@{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "CodeSandbox",
+    "pattern": "https://codesandbox.io/u/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "HackerRank",
+    "pattern": "https://www.hackerrank.com/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "LeetCode",
+    "pattern": "https://leetcode.com/{u}/",
+    "kind": "dev"
+  },
+  {
+    "name": "Codeforces",
+    "pattern": "https://codeforces.com/profile/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "AtCoder",
+    "pattern": "https://atcoder.jp/users/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "TopCoder",
+    "pattern": "https://www.topcoder.com/members/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Kaggle",
+    "pattern": "https://www.kaggle.com/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "OpenProcessing",
+    "pattern": "https://openprocessing.org/user/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Scratch",
+    "pattern": "https://scratch.mit.edu/users/{u}/",
+    "kind": "dev"
+  },
+  {
+    "name": "Devpost",
+    "pattern": "https://devpost.com/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "HackerOne",
+    "pattern": "https://hackerone.com/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Snyk",
+    "pattern": "https://snyk.io/advisor/npm-package/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Libraries.io",
+    "pattern": "https://libraries.io/users/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "npmtrends",
+    "pattern": "https://www.npmtrends.com/{u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Maven Repo (search)",
+    "pattern": "https://search.maven.org/search?q={u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Central Sonatype",
+    "pattern": "https://central.sonatype.com/search?q={u}",
+    "kind": "dev"
+  },
+  {
+    "name": "Vercel",
+    "pattern": "https://vercel.com/{u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Vercel (app subdomain)",
+    "pattern": "https://{u}.vercel.app",
+    "kind": "hosting"
+  },
+  {
+    "name": "Netlify",
+    "pattern": "https://app.netlify.com/teams/{u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Netlify (app subdomain)",
+    "pattern": "https://{u}.netlify.app",
+    "kind": "hosting"
+  },
+  {
+    "name": "Railway",
+    "pattern": "https://railway.app/profile/{u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Render",
+    "pattern": "https://render.com/u/{u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Fly.io",
+    "pattern": "https://fly.io/u/{u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Heroku",
+    "pattern": "https://dashboard.heroku.com/apps?owner={u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Herokuapp subdomain",
+    "pattern": "https://{u}.herokuapp.com",
+    "kind": "hosting"
+  },
+  {
+    "name": "PythonAnywhere",
+    "pattern": "https://www.pythonanywhere.com/user/{u}/",
+    "kind": "hosting"
+  },
+  {
+    "name": "Firebase",
+    "pattern": "https://firebase.google.com/u/{u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Supabase",
+    "pattern": "https://supabase.com/profile/{u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Cloudflare Pages",
+    "pattern": "https://{u}.pages.dev",
+    "kind": "hosting"
+  },
+  {
+    "name": "Cloudflare Workers",
+    "pattern": "https://{u}.workers.dev",
+    "kind": "hosting"
+  },
+  {
+    "name": "GitHub Actions (search)",
+    "pattern": "https://github.com/search?q={u}&type=users",
+    "kind": "hosting"
+  },
+  {
+    "name": "DigitalOcean community",
+    "pattern": "https://www.digitalocean.com/community/users/{u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Hetzner (search)",
+    "pattern": "https://www.hetzner.com/search?q={u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "OVH (search)",
+    "pattern": "https://www.ovhcloud.com/en/search/?q={u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Namecheap (search)",
+    "pattern": "https://www.namecheap.com/search/results/?query={u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Porkbun (search)",
+    "pattern": "https://porkbun.com/checkout/search?q={u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "whois.com (search)",
+    "pattern": "https://www.whois.com/whois/{u}",
+    "kind": "hosting"
+  },
+  {
+    "name": "Roblox",
+    "pattern": "https://www.roblox.com/users/profile?username={u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Steam vanity",
+    "pattern": "https://steamcommunity.com/id/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Steam groups",
+    "pattern": "https://steamcommunity.com/groups/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Epic Games (store)",
+    "pattern": "https://store.epicgames.com/u/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "GOG",
+    "pattern": "https://www.gog.com/u/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "itch.io",
+    "pattern": "https://{u}.itch.io",
+    "kind": "gaming"
+  },
+  {
+    "name": "GameJolt",
+    "pattern": "https://gamejolt.com/@{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Speedrun.com",
+    "pattern": "https://www.speedrun.com/user/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Faceit",
+    "pattern": "https://www.faceit.com/en/players/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Tracker.gg (search)",
+    "pattern": "https://tracker.gg/search/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "OP.GG (summoner)",
+    "pattern": "https://op.gg/summoners/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Nexus Mods",
+    "pattern": "https://www.nexusmods.com/users/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Modrinth",
+    "pattern": "https://modrinth.com/user/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "CurseForge",
+    "pattern": "https://www.curseforge.com/members/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Planet Minecraft",
+    "pattern": "https://www.planetminecraft.com/member/{u}/",
+    "kind": "gaming"
+  },
+  {
+    "name": "SpigotMC",
+    "pattern": "https://www.spigotmc.org/members/{u}/",
+    "kind": "gaming"
+  },
+  {
+    "name": "Hypixel forums",
+    "pattern": "https://hypixel.net/members/{u}/",
+    "kind": "gaming"
+  },
+  {
+    "name": "Chess.com",
+    "pattern": "https://www.chess.com/member/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Lichess",
+    "pattern": "https://lichess.org/@/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Pokemon Showdown",
+    "pattern": "https://pokemonshowdown.com/users/{u}",
+    "kind": "gaming"
+  },
+  {
+    "name": "Fragment (Telegram)",
+    "pattern": "https://fragment.com/u/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Getgems",
+    "pattern": "https://getgems.io/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "OpenSea",
+    "pattern": "https://opensea.io/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Rarible",
+    "pattern": "https://rarible.com/user/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Magic Eden",
+    "pattern": "https://magiceden.io/u/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Blur",
+    "pattern": "https://blur.io/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "LooksRare",
+    "pattern": "https://looksrare.org/accounts/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Foundation",
+    "pattern": "https://foundation.app/@{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Zora",
+    "pattern": "https://zora.co/@{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Etherscan (address)",
+    "pattern": "https://etherscan.io/address/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Polygonscan (address)",
+    "pattern": "https://polygonscan.com/address/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "BscScan (address)",
+    "pattern": "https://bscscan.com/address/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Solscan (address)",
+    "pattern": "https://solscan.io/account/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Tronscan (address)",
+    "pattern": "https://tronscan.org/#/address/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "TON Viewer",
+    "pattern": "https://tonviewer.com/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "TON Scan",
+    "pattern": "https://tonscan.org/address/{u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "CoinMarketCap (search)",
+    "pattern": "https://coinmarketcap.com/search/?q={u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "CoinGecko (search)",
+    "pattern": "https://www.coingecko.com/en/search?query={u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Binance (search)",
+    "pattern": "https://www.binance.com/en/search?query={u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "OKX (search)",
+    "pattern": "https://www.okx.com/search?query={u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Bybit (search)",
+    "pattern": "https://www.bybit.com/en/search?keyword={u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "KuCoin (search)",
+    "pattern": "https://www.kucoin.com/search?keyword={u}",
+    "kind": "crypto_nft"
+  },
+  {
+    "name": "Pastebin",
+    "pattern": "https://pastebin.com/u/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Rentry",
+    "pattern": "https://rentry.co/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Paste.ee",
+    "pattern": "https://paste.ee/u/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "dpaste",
+    "pattern": "https://dpaste.com/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Hastebin",
+    "pattern": "https://hastebin.com/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Scribd",
+    "pattern": "https://www.scribd.com/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "SlideShare",
+    "pattern": "https://www.slideshare.net/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Academia",
+    "pattern": "https://independent.academia.edu/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "ResearchGate",
+    "pattern": "https://www.researchgate.net/profile/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "GitHub search pages",
+    "pattern": "https://github.com/search?q={u}",
+    "kind": "other"
+  },
+  {
+    "name": "Google Play (search)",
+    "pattern": "https://play.google.com/store/search?q={u}&c=apps",
+    "kind": "other"
+  },
+  {
+    "name": "Apple App Store (search)",
+    "pattern": "https://apps.apple.com/us/search?term={u}",
+    "kind": "other"
+  },
+  {
+    "name": "Wikipedia (search)",
+    "pattern": "https://en.wikipedia.org/w/index.php?search={u}",
+    "kind": "other"
+  },
+  {
+    "name": "Internet Archive (search)",
+    "pattern": "https://archive.org/search?query={u}",
+    "kind": "other"
+  },
+  {
+    "name": "Keybase",
+    "pattern": "https://keybase.io/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Matrix.to",
+    "pattern": "https://matrix.to/#/@{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Element",
+    "pattern": "https://app.element.io/#/user/@{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Revolt",
+    "pattern": "https://revolt.chat/users/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Guilded",
+    "pattern": "https://www.guilded.gg/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Trello",
+    "pattern": "https://trello.com/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Notion (user)",
+    "pattern": "https://www.notion.so/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Figma Community",
+    "pattern": "https://www.figma.com/@{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Canva",
+    "pattern": "https://www.canva.com/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Giphy",
+    "pattern": "https://giphy.com/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Tenor",
+    "pattern": "https://tenor.com/users/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "ImgBB",
+    "pattern": "https://imgbb.com/user/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "StackShare",
+    "pattern": "https://stackshare.io/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Crunchbase",
+    "pattern": "https://www.crunchbase.com/person/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "AlternativeTo",
+    "pattern": "https://alternativeto.net/user/{u}/",
+    "kind": "other"
+  },
+  {
+    "name": "WordPress.com",
+    "pattern": "https://profiles.wordpress.org/{u}/",
+    "kind": "other"
+  },
+  {
+    "name": "GitHub Sponsors",
+    "pattern": "https://github.com/sponsors/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Blogger",
+    "pattern": "https://{u}.blogspot.com",
+    "kind": "other"
+  },
+  {
+    "name": "LiveJournal",
+    "pattern": "https://{u}.livejournal.com",
+    "kind": "other"
+  },
+  {
+    "name": "Imgix (search)",
+    "pattern": "https://www.google.com/search?q=site:imgix.net+{u}",
+    "kind": "other"
+  },
+  {
+    "name": "CodeWars",
+    "pattern": "https://www.codewars.com/users/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Exercism",
+    "pattern": "https://exercism.org/profiles/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "OpenCollective",
+    "pattern": "https://opencollective.com/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Crowdin",
+    "pattern": "https://crowdin.com/profile/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Transifex",
+    "pattern": "https://www.transifex.com/user/profile/{u}/",
+    "kind": "other"
+  },
+  {
+    "name": "OpenStreetMap",
+    "pattern": "https://www.openstreetmap.org/user/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "GitHub Discussions (search)",
+    "pattern": "https://github.com/search?q={u}&type=discussions",
+    "kind": "other"
+  },
+  {
+    "name": "Stack Overflow Tags (search)",
+    "pattern": "https://stackoverflow.com/search?q={u}",
+    "kind": "other"
+  },
+  {
+    "name": "Kofi page alt",
+    "pattern": "https://ko-fi.com/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Buymeacoffee alt",
+    "pattern": "https://buymeacoffee.com/{u}",
+    "kind": "other"
+  },
+  {
+    "name": "Telegram analytics TGStat (search)",
+    "pattern": "https://tgstat.com/search?q={u}",
+    "kind": "other"
+  },
+  {
+    "name": "Telemetr (search)",
+    "pattern": "https://telemetr.me/search?q={u}",
+    "kind": "other"
+  },
+  {
+    "name": "Combot (search)",
+    "pattern": "https://combot.org/search?q={u}",
+    "kind": "other"
+  },
+  {
+    "name": "Google mention: tumblr.com",
+    "pattern": "https://www.google.com/search?q=site%3Atumblr.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: blogspot.com",
+    "pattern": "https://www.google.com/search?q=site%3Ablogspot.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: wordpress.com",
+    "pattern": "https://www.google.com/search?q=site%3Awordpress.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: wordpress.org",
+    "pattern": "https://www.google.com/search?q=site%3Awordpress.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: wixsite.com",
+    "pattern": "https://www.google.com/search?q=site%3Awixsite.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: wix.com",
+    "pattern": "https://www.google.com/search?q=site%3Awix.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: square.site",
+    "pattern": "https://www.google.com/search?q=site%3Asquare.site+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: weebly.com",
+    "pattern": "https://www.google.com/search?q=site%3Aweebly.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: site123.me",
+    "pattern": "https://www.google.com/search?q=site%3Asite123.me+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: carrd.co",
+    "pattern": "https://www.google.com/search?q=site%3Acarrd.co+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: linktr.ee",
+    "pattern": "https://www.google.com/search?q=site%3Alinktr.ee+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: taplink.cc",
+    "pattern": "https://www.google.com/search?q=site%3Ataplink.cc+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: beacons.ai",
+    "pattern": "https://www.google.com/search?q=site%3Abeacons.ai+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: solo.to",
+    "pattern": "https://www.google.com/search?q=site%3Asolo.to+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: lnk.bio",
+    "pattern": "https://www.google.com/search?q=site%3Alnk.bio+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: bio.site",
+    "pattern": "https://www.google.com/search?q=site%3Abio.site+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: itch.io",
+    "pattern": "https://www.google.com/search?q=site%3Aitch.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: gamejolt.com",
+    "pattern": "https://www.google.com/search?q=site%3Agamejolt.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: moddb.com",
+    "pattern": "https://www.google.com/search?q=site%3Amoddb.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: nexusmods.com",
+    "pattern": "https://www.google.com/search?q=site%3Anexusmods.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: curseforge.com",
+    "pattern": "https://www.google.com/search?q=site%3Acurseforge.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: modrinth.com",
+    "pattern": "https://www.google.com/search?q=site%3Amodrinth.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: spigotmc.org",
+    "pattern": "https://www.google.com/search?q=site%3Aspigotmc.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: planetminecraft.com",
+    "pattern": "https://www.google.com/search?q=site%3Aplanetminecraft.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: roblox.com",
+    "pattern": "https://www.google.com/search?q=site%3Aroblox.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: steamcommunity.com",
+    "pattern": "https://www.google.com/search?q=site%3Asteamcommunity.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: epicgames.com",
+    "pattern": "https://www.google.com/search?q=site%3Aepicgames.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: gog.com",
+    "pattern": "https://www.google.com/search?q=site%3Agog.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: battle.net",
+    "pattern": "https://www.google.com/search?q=site%3Abattle.net+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: riotgames.com",
+    "pattern": "https://www.google.com/search?q=site%3Ariotgames.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: ea.com",
+    "pattern": "https://www.google.com/search?q=site%3Aea.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: ubisoft.com",
+    "pattern": "https://www.google.com/search?q=site%3Aubisoft.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: twitch.tv",
+    "pattern": "https://www.google.com/search?q=site%3Atwitch.tv+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: youtube.com",
+    "pattern": "https://www.google.com/search?q=site%3Ayoutube.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: tiktok.com",
+    "pattern": "https://www.google.com/search?q=site%3Atiktok.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: instagram.com",
+    "pattern": "https://www.google.com/search?q=site%3Ainstagram.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: x.com",
+    "pattern": "https://www.google.com/search?q=site%3Ax.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: twitter.com",
+    "pattern": "https://www.google.com/search?q=site%3Atwitter.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: facebook.com",
+    "pattern": "https://www.google.com/search?q=site%3Afacebook.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: reddit.com",
+    "pattern": "https://www.google.com/search?q=site%3Areddit.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: pinterest.com",
+    "pattern": "https://www.google.com/search?q=site%3Apinterest.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: linkedin.com",
+    "pattern": "https://www.google.com/search?q=site%3Alinkedin.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: snapchat.com",
+    "pattern": "https://www.google.com/search?q=site%3Asnapchat.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: quora.com",
+    "pattern": "https://www.google.com/search?q=site%3Aquora.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: medium.com",
+    "pattern": "https://www.google.com/search?q=site%3Amedium.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: substack.com",
+    "pattern": "https://www.google.com/search?q=site%3Asubstack.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: dev.to",
+    "pattern": "https://www.google.com/search?q=site%3Adev.to+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: hashnode.com",
+    "pattern": "https://www.google.com/search?q=site%3Ahashnode.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: github.com",
+    "pattern": "https://www.google.com/search?q=site%3Agithub.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: gitlab.com",
+    "pattern": "https://www.google.com/search?q=site%3Agitlab.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: bitbucket.org",
+    "pattern": "https://www.google.com/search?q=site%3Abitbucket.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: codeberg.org",
+    "pattern": "https://www.google.com/search?q=site%3Acodeberg.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: sourceforge.net",
+    "pattern": "https://www.google.com/search?q=site%3Asourceforge.net+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: launchpad.net",
+    "pattern": "https://www.google.com/search?q=site%3Alaunchpad.net+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: pypi.org",
+    "pattern": "https://www.google.com/search?q=site%3Apypi.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: npmjs.com",
+    "pattern": "https://www.google.com/search?q=site%3Anpmjs.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: rubygems.org",
+    "pattern": "https://www.google.com/search?q=site%3Arubygems.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: packagist.org",
+    "pattern": "https://www.google.com/search?q=site%3Apackagist.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: crates.io",
+    "pattern": "https://www.google.com/search?q=site%3Acrates.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: nuget.org",
+    "pattern": "https://www.google.com/search?q=site%3Anuget.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: hub.docker.com",
+    "pattern": "https://www.google.com/search?q=site%3Ahub.docker.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: replit.com",
+    "pattern": "https://www.google.com/search?q=site%3Areplit.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: glitch.com",
+    "pattern": "https://www.google.com/search?q=site%3Aglitch.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: codesandbox.io",
+    "pattern": "https://www.google.com/search?q=site%3Acodesandbox.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: codepen.io",
+    "pattern": "https://www.google.com/search?q=site%3Acodepen.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: jsfiddle.net",
+    "pattern": "https://www.google.com/search?q=site%3Ajsfiddle.net+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: vercel.com",
+    "pattern": "https://www.google.com/search?q=site%3Avercel.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: netlify.com",
+    "pattern": "https://www.google.com/search?q=site%3Anetlify.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: railway.app",
+    "pattern": "https://www.google.com/search?q=site%3Arailway.app+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: render.com",
+    "pattern": "https://www.google.com/search?q=site%3Arender.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: fly.io",
+    "pattern": "https://www.google.com/search?q=site%3Afly.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: heroku.com",
+    "pattern": "https://www.google.com/search?q=site%3Aheroku.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: pythonanywhere.com",
+    "pattern": "https://www.google.com/search?q=site%3Apythonanywhere.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: digitalocean.com",
+    "pattern": "https://www.google.com/search?q=site%3Adigitalocean.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: linode.com",
+    "pattern": "https://www.google.com/search?q=site%3Alinode.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: vultr.com",
+    "pattern": "https://www.google.com/search?q=site%3Avultr.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: ovh.com",
+    "pattern": "https://www.google.com/search?q=site%3Aovh.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: hetzner.com",
+    "pattern": "https://www.google.com/search?q=site%3Ahetzner.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: namecheap.com",
+    "pattern": "https://www.google.com/search?q=site%3Anamecheap.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: godaddy.com",
+    "pattern": "https://www.google.com/search?q=site%3Agodaddy.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: porkbun.com",
+    "pattern": "https://www.google.com/search?q=site%3Aporkbun.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: ionos.com",
+    "pattern": "https://www.google.com/search?q=site%3Aionos.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: gandi.net",
+    "pattern": "https://www.google.com/search?q=site%3Agandi.net+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: opensea.io",
+    "pattern": "https://www.google.com/search?q=site%3Aopensea.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: rarible.com",
+    "pattern": "https://www.google.com/search?q=site%3Ararible.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: foundation.app",
+    "pattern": "https://www.google.com/search?q=site%3Afoundation.app+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: zora.co",
+    "pattern": "https://www.google.com/search?q=site%3Azora.co+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: magiceden.io",
+    "pattern": "https://www.google.com/search?q=site%3Amagiceden.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: getgems.io",
+    "pattern": "https://www.google.com/search?q=site%3Agetgems.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: fragment.com",
+    "pattern": "https://www.google.com/search?q=site%3Afragment.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: etherscan.io",
+    "pattern": "https://www.google.com/search?q=site%3Aetherscan.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: polygonscan.com",
+    "pattern": "https://www.google.com/search?q=site%3Apolygonscan.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: bscscan.com",
+    "pattern": "https://www.google.com/search?q=site%3Abscscan.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: solscan.io",
+    "pattern": "https://www.google.com/search?q=site%3Asolscan.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: tronscan.org",
+    "pattern": "https://www.google.com/search?q=site%3Atronscan.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: tonviewer.com",
+    "pattern": "https://www.google.com/search?q=site%3Atonviewer.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: tonscan.org",
+    "pattern": "https://www.google.com/search?q=site%3Atonscan.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: coinmarketcap.com",
+    "pattern": "https://www.google.com/search?q=site%3Acoinmarketcap.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: coingecko.com",
+    "pattern": "https://www.google.com/search?q=site%3Acoingecko.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: binance.com",
+    "pattern": "https://www.google.com/search?q=site%3Abinance.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: coinbase.com",
+    "pattern": "https://www.google.com/search?q=site%3Acoinbase.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: kraken.com",
+    "pattern": "https://www.google.com/search?q=site%3Akraken.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: okx.com",
+    "pattern": "https://www.google.com/search?q=site%3Aokx.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: bybit.com",
+    "pattern": "https://www.google.com/search?q=site%3Abybit.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: kucoin.com",
+    "pattern": "https://www.google.com/search?q=site%3Akucoin.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: gate.io",
+    "pattern": "https://www.google.com/search?q=site%3Agate.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: patreon.com",
+    "pattern": "https://www.google.com/search?q=site%3Apatreon.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: ko-fi.com",
+    "pattern": "https://www.google.com/search?q=site%3Ako-fi.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: buymeacoffee.com",
+    "pattern": "https://www.google.com/search?q=site%3Abuymeacoffee.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: boosty.to",
+    "pattern": "https://www.google.com/search?q=site%3Aboosty.to+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: gumroad.com",
+    "pattern": "https://www.google.com/search?q=site%3Agumroad.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: etsy.com",
+    "pattern": "https://www.google.com/search?q=site%3Aetsy.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: ebay.com",
+    "pattern": "https://www.google.com/search?q=site%3Aebay.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: soundcloud.com",
+    "pattern": "https://www.google.com/search?q=site%3Asoundcloud.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: bandcamp.com",
+    "pattern": "https://www.google.com/search?q=site%3Abandcamp.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: mixcloud.com",
+    "pattern": "https://www.google.com/search?q=site%3Amixcloud.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: last.fm",
+    "pattern": "https://www.google.com/search?q=site%3Alast.fm+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: spotify.com",
+    "pattern": "https://www.google.com/search?q=site%3Aspotify.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: deezer.com",
+    "pattern": "https://www.google.com/search?q=site%3Adeezer.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: behance.net",
+    "pattern": "https://www.google.com/search?q=site%3Abehance.net+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: dribbble.com",
+    "pattern": "https://www.google.com/search?q=site%3Adribbble.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: deviantart.com",
+    "pattern": "https://www.google.com/search?q=site%3Adeviantart.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: artstation.com",
+    "pattern": "https://www.google.com/search?q=site%3Aartstation.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: pixiv.net",
+    "pattern": "https://www.google.com/search?q=site%3Apixiv.net+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: sketchfab.com",
+    "pattern": "https://www.google.com/search?q=site%3Asketchfab.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: flickr.com",
+    "pattern": "https://www.google.com/search?q=site%3Aflickr.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: imgur.com",
+    "pattern": "https://www.google.com/search?q=site%3Aimgur.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: stackoverflow.com",
+    "pattern": "https://www.google.com/search?q=site%3Astackoverflow.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: stackexchange.com",
+    "pattern": "https://www.google.com/search?q=site%3Astackexchange.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: news.ycombinator.com",
+    "pattern": "https://www.google.com/search?q=site%3Anews.ycombinator.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: lobste.rs",
+    "pattern": "https://www.google.com/search?q=site%3Alobste.rs+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: pastebin.com",
+    "pattern": "https://www.google.com/search?q=site%3Apastebin.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: rentry.co",
+    "pattern": "https://www.google.com/search?q=site%3Arentry.co+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: paste.ee",
+    "pattern": "https://www.google.com/search?q=site%3Apaste.ee+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: dpaste.com",
+    "pattern": "https://www.google.com/search?q=site%3Adpaste.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: hastebin.com",
+    "pattern": "https://www.google.com/search?q=site%3Ahastebin.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: archive.org",
+    "pattern": "https://www.google.com/search?q=site%3Aarchive.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: scribd.com",
+    "pattern": "https://www.google.com/search?q=site%3Ascribd.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: slideshare.net",
+    "pattern": "https://www.google.com/search?q=site%3Aslideshare.net+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: researchgate.net",
+    "pattern": "https://www.google.com/search?q=site%3Aresearchgate.net+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: academia.edu",
+    "pattern": "https://www.google.com/search?q=site%3Aacademia.edu+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: openstreetmap.org",
+    "pattern": "https://www.google.com/search?q=site%3Aopenstreetmap.org+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: keybase.io",
+    "pattern": "https://www.google.com/search?q=site%3Akeybase.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: matrix.to",
+    "pattern": "https://www.google.com/search?q=site%3Amatrix.to+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: app.element.io",
+    "pattern": "https://www.google.com/search?q=site%3Aapp.element.io+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: trello.com",
+    "pattern": "https://www.google.com/search?q=site%3Atrello.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: notion.so",
+    "pattern": "https://www.google.com/search?q=site%3Anotion.so+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: figma.com",
+    "pattern": "https://www.google.com/search?q=site%3Afigma.com+%22{u}%22",
+    "kind": "dork"
+  },
+  {
+    "name": "Google mention: canva.com",
+    "pattern": "https://www.google.com/search?q=site%3Acanva.com+%22{u}%22",
+    "kind": "dork"
+  }
+]
