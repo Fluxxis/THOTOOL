@@ -4,9 +4,9 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-async function headOrGet(url, timeoutMs = 9000) {
-  const ua = "Mozilla/5.0 (compatible; UsernameChecker/2.0; +https://vercel.com)";
-  // Many sites block HEAD, so we try HEAD then GET with Range.
+async function headOrGet(url, timeoutMs = 3500) {
+  const ua = "Mozilla/5.0 (compatible; UsernameChecker/6.0; +https://vercel.com)";
+
   const tryFetch = async (method, headers) => {
     const controller = new AbortController();
     const t = setTimeout(() => controller.abort(), timeoutMs);
@@ -29,6 +29,7 @@ async function headOrGet(url, timeoutMs = 9000) {
     }
   };
 
+  // HEAD first (fast). Many sites block it, so fallback to tiny GET.
   let r = await tryFetch("HEAD", {});
   if (r) return r;
 
@@ -46,7 +47,7 @@ function buildUrl(pattern, u) {
   return pattern.replaceAll("{u}", encodeURIComponent(u));
 }
 
-async function runPool(items, worker, concurrency = 8, launchDelayMs = 90) {
+async function runPool(items, worker, concurrency = 4, launchDelayMs = 120) {
   const results = new Array(items.length);
   let idx = 0;
 
@@ -54,7 +55,10 @@ async function runPool(items, worker, concurrency = 8, launchDelayMs = 90) {
     while (true) {
       const current = idx++;
       if (current >= items.length) break;
-      if (launchDelayMs > 0) await sleep(launchDelayMs + Math.floor(Math.random() * 60));
+
+      if (launchDelayMs > 0) {
+        await sleep(launchDelayMs + Math.floor(Math.random() * 80));
+      }
       results[current] = await worker(items[current], current);
     }
   }
@@ -69,11 +73,13 @@ export default async function handler(req, res) {
   const total = sites.length;
 
   const offset = Math.max(parseInt(req.query.offset || "0", 10) || 0, 0);
-  const pageSizeRaw = parseInt(req.query.page_size || "60", 10) || 60;
-  const page_size = Math.min(Math.max(pageSizeRaw, 10), 120);
 
-  const concurrencyRaw = parseInt(req.query.concurrency || "8", 10) || 8;
-  const concurrency = Math.min(Math.max(concurrencyRaw, 2), 12);
+  // Smaller defaults to avoid Vercel function timeouts
+  const pageSizeRaw = parseInt(req.query.page_size || "20", 10) || 20;
+  const page_size = Math.min(Math.max(pageSizeRaw, 10), 40);
+
+  const concurrencyRaw = parseInt(req.query.concurrency || "4", 10) || 4;
+  const concurrency = Math.min(Math.max(concurrencyRaw, 2), 6);
 
   if (!username || username.length < 2 || username.length > 64) {
     res.status(400).json({ error: "Invalid username (2..64 chars)." });
@@ -97,7 +103,7 @@ export default async function handler(req, res) {
       };
     },
     concurrency,
-    95
+    120
   );
 
   const annotated = out.map((x) => {
