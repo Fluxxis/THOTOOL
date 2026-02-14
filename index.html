@@ -684,7 +684,8 @@
     rows.className = "rows";
 
     const syntaxOk = !!d.valid_syntax;
-    const deliverable = d.deliverable === true;
+    const mxFound = d.mx_found === true || d.deliverable === true;
+    const domainExists = d.domain_exists === true || mxFound;
     const disposable = d.disposable === true;
 
     rows.appendChild(row("email", d.email_address || d.email || ""));
@@ -692,9 +693,30 @@
 
     const flags = document.createElement("div");
     flags.appendChild(pill("SYNTAX " + (syntaxOk ? "OK" : "BAD"), syntaxOk));
-    if(d.deliverable != null) flags.appendChild(pill("DELIVERABLE " + (deliverable ? "YES" : "NO"), deliverable));
+    flags.appendChild(pill("DOMAIN " + (domainExists ? "YES" : "NO"), domainExists));
+    flags.appendChild(pill("MX " + (mxFound ? "YES" : "NO"), mxFound));
     if(d.disposable != null) flags.appendChild(pill("DISPOSABLE " + (disposable ? "YES" : "NO"), !disposable));
     rows.appendChild(row("check", flags));
+
+    if(d.suggestion){
+      rows.appendChild(row("suggestion", d.suggestion));
+    }
+
+    const mx = Array.isArray(d.mx_records) ? d.mx_records : [];
+    if(mx.length){
+      const list = document.createElement("div");
+      list.className = "list";
+      for(const rec of mx.slice(0, 20)){
+        const line = document.createElement("div");
+        line.className = "item";
+        const left = document.createElement("div");
+        left.className = "code";
+        left.textContent = `${rec.preference}  ${rec.exchange}`;
+        line.appendChild(left);
+        list.appendChild(line);
+      }
+      rows.appendChild(row("mx_records", list));
+    }
 
     return rows;
   }
@@ -815,7 +837,9 @@
   }
 
   function renderIP(data){
-    const d = data?.data ? data.data : data;
+    const root = (data && typeof data === "object") ? data : {};
+    const d = root?.data ? root.data : root;
+    const mapUrl = root?.map || d?.map || "";
     const rows = document.createElement("div");
     rows.className = "rows";
 
@@ -823,11 +847,59 @@
     const rdap = (d && typeof d._rdap === "object" && d._rdap) ? d._rdap : null;
     const ip = d?.ip || meta?.ip || "";
 
-    // Identity
-    rows.appendChild(row("ip", ip));
-    if(meta.ip_version) rows.appendChild(row("ip_version", String(meta.ip_version)));
-    if(d?._ptr) rows.appendChild(row("reverse_dns", d._ptr));
-    if(meta.fetched_at_iso) rows.appendChild(row("fetched_at", meta.fetched_at_iso));
+    // --- Pretty top block (what most people actually need) ---
+    rows.appendChild(row("IP Address", ip));
+
+    const cc = d?.country_code ? String(d.country_code) : (d?.countryCode ? String(d.countryCode) : "");
+    const countryName = d?.country ? String(d.country) : (d?.country_name ? String(d.country_name) : "");
+    if(countryName){
+      rows.appendChild(row("Country", cc ? `${countryName} [${cc}]` : countryName));
+    }
+
+    const regionName = d?.region ? String(d.region) : "";
+    const regionCode = d?.region_code ? String(d.region_code) : (d?.region_code ? String(d.region_code) : "");
+    if(regionName){
+      rows.appendChild(row("Region", regionCode ? `${regionName} (${regionCode})` : regionName));
+    }
+
+    const city = d?.city ? String(d.city) : "";
+    const postal = d?.postal ? String(d.postal) : (d?.zip ? String(d.zip) : "");
+    if(city){
+      rows.appendChild(row("City", postal ? `${city} (${postal})` : city));
+    }else if(postal){
+      rows.appendChild(row("City", `(${postal})`));
+    }
+
+    const tz = d?.timezone ? String(d.timezone) : (d?.timezone_id ? String(d.timezone_id) : "");
+    if(tz) rows.appendChild(row("Timezone", tz));
+
+    const isp = d?.isp ? String(d.isp) : (d?.connection?.isp ? String(d.connection.isp) : "");
+    if(isp) rows.appendChild(row("ISP", isp));
+
+    const org = d?.organization ? String(d.organization) : (d?.org ? String(d.org) : (d?.connection?.org ? String(d.connection.org) : ""));
+    if(org) rows.appendChild(row("Organization", org));
+
+    const asnNum = (d?.as_number != null) ? String(d.as_number) : (d?.asn != null ? String(d.asn) : "");
+    rows.appendChild(row("AS Number", asnNum || "—"));
+
+    const lat = (d?.latitude != null) ? d.latitude : d?.lat;
+    const lon = (d?.longitude != null) ? d.longitude : d?.lon;
+    if(lat != null && lon != null) rows.appendChild(row("Coordinates", `${lat}, ${lon}`));
+
+    if(mapUrl){
+      const a = document.createElement("a");
+      a.href = mapUrl;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent = mapUrl;
+      rows.appendChild(row("Map", a));
+    }
+
+    // Tech bits (still useful)
+    const rev = d?._ptr || d?.reverse || "";
+    if(rev) rows.appendChild(row("Reverse DNS", rev));
+    if(meta.ip_version) rows.appendChild(row("IP Version", String(meta.ip_version)));
+    if(meta.fetched_at_iso) rows.appendChild(row("Fetched At", meta.fetched_at_iso));
 
     // Flags (showing "good" when FALSE for risky flags)
     const flags = document.createElement("div");
@@ -847,90 +919,18 @@
     }
     if(flags.childNodes.length) rows.appendChild(row("flags", flags));
 
-    // Location / locale (supports both ipapi.co and ipwho.is)
-    const countryName = d.country_name || d.country || "";
-    const inEU = (d.in_eu != null) ? d.in_eu : (d.is_eu != null ? d.is_eu : "");
-    const calling = d.country_calling_code || d.calling_code || "";
-    const capital = d.country_capital || d.capital || "";
-    const tld = d.country_tld || "";
-
-    const lat = d.latitude;
-    const lon = d.longitude;
-
-    if(d.continent) rows.appendChild(row("continent", d.continent));
-    if(d.continent_code) rows.appendChild(row("continent_code", d.continent_code));
-    if(countryName) rows.appendChild(row("country", countryName));
-    if(d.country_code) rows.appendChild(row("country_code", d.country_code));
-    if(d.region) rows.appendChild(row("region", d.region));
-    if(d.region_code) rows.appendChild(row("region_code", d.region_code));
-    if(d.city) rows.appendChild(row("city", d.city));
-    if(d.postal) rows.appendChild(row("postal", d.postal));
-    if(inEU !== "") rows.appendChild(row("in_eu", String(inEU)));
-    if(calling) rows.appendChild(row("calling_code", calling));
-    if(capital) rows.appendChild(row("capital", capital));
-    if(tld) rows.appendChild(row("tld", tld));
-    if(d.borders) rows.appendChild(row("borders", d.borders));
-    if(lat != null) rows.appendChild(row("latitude", String(lat)));
-    if(lon != null) rows.appendChild(row("longitude", String(lon)));
-
-    // Flag (emoji + image if present)
-    if(d.flag && typeof d.flag === "object"){
-      const parts = [];
-      if(d.flag.emoji) parts.push(d.flag.emoji);
-      if(d.flag.img) parts.push(d.flag.img);
-      if(parts.length) rows.appendChild(row("flag", parts.join("  ")));
+    // Extra: show security-ish hints if present
+    if(d.mobile != null || d.proxy != null || d.hosting != null){
+      const sec = document.createElement("div");
+      if(d.mobile != null) sec.appendChild(pill(`MOBILE ${d.mobile ? "YES" : "NO"}`, true));
+      if(d.proxy != null) sec.appendChild(pill(`PROXY ${d.proxy ? "YES" : "NO"}`, !d.proxy));
+      if(d.hosting != null) sec.appendChild(pill(`HOSTING ${d.hosting ? "YES" : "NO"}`, !d.hosting));
+      if(sec.childNodes.length) rows.appendChild(row("Hints", sec));
     }
 
-    // Timezone
-    if(d.timezone){
-      if(typeof d.timezone === "string"){
-        rows.appendChild(row("timezone", d.timezone));
-      }else if(typeof d.timezone === "object"){
-        if(d.timezone.id) rows.appendChild(row("timezone_id", d.timezone.id));
-        if(d.timezone.utc) rows.appendChild(row("timezone_utc", d.timezone.utc));
-        if(d.timezone.abbr) rows.appendChild(row("timezone_abbr", d.timezone.abbr));
-        if(d.timezone.current_time) rows.appendChild(row("timezone_current_time", d.timezone.current_time));
-        if(d.timezone.is_dst != null) rows.appendChild(row("timezone_is_dst", String(d.timezone.is_dst)));
-        if(d.timezone.offset != null) rows.appendChild(row("timezone_offset_sec", String(d.timezone.offset)));
-      }
-    }
-    if(d.utc_offset) rows.appendChild(row("utc_offset", String(d.utc_offset)));
-    if(d.languages) rows.appendChild(row("languages", String(d.languages)));
-
-    // Currency
-    if(d.currency){
-      if(typeof d.currency === "string"){
-        rows.appendChild(row("currency", d.currency));
-      }else if(typeof d.currency === "object"){
-        if(d.currency.code) rows.appendChild(row("currency_code", d.currency.code));
-        if(d.currency.name) rows.appendChild(row("currency_name", d.currency.name));
-        if(d.currency.symbol) rows.appendChild(row("currency_symbol", d.currency.symbol));
-        if(d.currency.plural) rows.appendChild(row("currency_plural", d.currency.plural));
-        if(d.currency.exchange_rate != null) rows.appendChild(row("currency_exchange_rate", String(d.currency.exchange_rate)));
-      }
-    }
-    if(d.currency_name && typeof d.currency !== "object") rows.appendChild(row("currency_name", d.currency_name));
-
-    // Network
-    const conn = (d.connection && typeof d.connection === "object") ? d.connection : null;
-    const asn = d.asn || conn?.asn || "";
-    const org = d.org || conn?.org || "";
-    if(asn) rows.appendChild(row("asn", String(asn)));
-    if(org) rows.appendChild(row("org", String(org)));
-    if(conn){
-      if(conn.isp) rows.appendChild(row("isp", conn.isp));
-      if(conn.domain) rows.appendChild(row("domain", conn.domain));
-    }
-
-    // Security flags (if present)
-    if(d.security && typeof d.security === "object"){
-      const sec = d.security;
-      const secBits = [];
-      for(const k of ["anonymous","proxy","vpn","tor","hosting"]){
-        if(sec[k] != null) secBits.push(`${k}:${sec[k] ? "yes" : "no"}`);
-      }
-      if(secBits.length) rows.appendChild(row("security", secBits.join("  ")));
-    }
+    // Network (if any extra fields exist)
+    if(d.as_text) rows.appendChild(row("AS", d.as_text));
+    if(d.reverse && !rev) rows.appendChild(row("Reverse", d.reverse));
 
     // RDAP enrichment
     if(rdap){
