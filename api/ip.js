@@ -1,8 +1,9 @@
 // IP lookup + enrichment.
-// Returns ipapi.co fields at top-level (for backward compatibility) and adds:
-//  - _meta: derived info
+// Primary upstream: ip-api.com (free over HTTP).
+// Adds:
+//  - _meta: derived info (ip version + IPv4 classification)
 //  - _ptr: reverse DNS (PTR) via DNS-over-HTTPS
-//  - _rdap: network registration info via rdap.org
+//  - _rdap: registration info via rdap.org (best-effort)
 
 import net from "node:net";
 
@@ -29,10 +30,10 @@ function classifyIPv4(ip){
   const isBroadcast = ip === "255.255.255.255";
   const isUnspecified = ip === "0.0.0.0";
   const isDocumentation =
-    inRange(parts, 192,192, 0,0, 2,2, 0,255) ||   // 192.0.2.0/24
-    inRange(parts, 198,198, 51,51, 100,100, 0,255) || // 198.51.100.0/24
-    inRange(parts, 203,203, 0,0, 113,113, 0,255); // 203.0.113.0/24
-  const isBenchmark = inRange(parts, 198,198, 18,18, 0,19, 0,255); // 198.18.0.0/15 (rough)
+    inRange(parts, 192,192, 0,0, 2,2, 0,255) ||
+    inRange(parts, 198,198, 51,51, 100,100, 0,255) ||
+    inRange(parts, 203,203, 0,0, 113,113, 0,255);
+  const isBenchmark = inRange(parts, 198,198, 18,18, 0,19, 0,255);
   const isReserved = isBroadcast || isUnspecified || isDocumentation || isBenchmark;
 
   return {
@@ -50,50 +51,54 @@ function classifyIPv4(ip){
 }
 
 function ipv6ToArpa(ip){
-  // Expand and convert to nibble-reversed ip6.arpa.
-  // Minimal implementation; if parsing fails, return null.
   try{
     const raw = ip.toLowerCase();
     if(!raw.includes(":")) return null;
-
-    // Split on ::
     const [left, right] = raw.split("::");
     const leftParts = left ? left.split(":").filter(Boolean) : [];
     const rightParts = (raw.includes("::") && right) ? right.split(":").filter(Boolean) : [];
-
     const fill = 8 - (leftParts.length + rightParts.length);
     if(fill < 0) return null;
-
     const parts = [
       ...leftParts,
       ...Array(fill).fill("0"),
       ...rightParts,
     ].map(p => p.padStart(4,"0"));
-
     const hex = parts.join("");
     return hex.split("").reverse().join(".") + ".ip6.arpa";
-  }catch{
-    return null;
-  }
+  }catch{ return null; }
 }
 
 function ipv4ToArpa(ip){
   return ip.split(".").reverse().join(".") + ".in-addr.arpa";
 }
 
-async function fetchJson(url){
-  const r = await fetch(url, { headers: { "accept": "application/json" } });
-  const data = await r.json().catch(() => ({}));
-  return { ok: r.ok, status: r.status, data };
+async function fetchJson(url, { timeoutMs = 7000, headers = {} } = {}){
+  const ctrl = new AbortController();
+  const timer = setTimeout(()=>ctrl.abort(), timeoutMs);
+  try{
+    const r = await fetch(url, {
+      headers: { accept: "application/json", ...headers },
+      signal: ctrl.signal,
+    });
+    const ctype = (r.headers.get("content-type") || "").toLowerCase();
+    let data = {};
+    if(ctype.includes("application/json")) data = await r.json().catch(()=> ({}));
+    else data = await r.text().catch(()=> "");
+    return { ok: r.ok, status: r.status, data };
+  }catch(e){
+    if(e && e.name === "AbortError") return { ok:false, status: 504, data: { message: "Timeout" } };
+    return { ok:false, status: 502, data: { message: "Network error" } };
+  }finally{
+    clearTimeout(timer);
+  }
 }
 
 async function reversePTR(ip){
   const arpa = isIPv4(ip) ? ipv4ToArpa(ip) : (isIPv6(ip) ? ipv6ToArpa(ip) : null);
   if(!arpa) return null;
-
-  // Google DNS-over-HTTPS
   const url = `https://dns.google/resolve?name=${encodeURIComponent(arpa)}&type=PTR`;
-  const r = await fetchJson(url);
+  const r = await fetchJson(url, { timeoutMs: 4000 });
   if(!r.ok) return null;
   const ans = Array.isArray(r.data?.Answer) ? r.data.Answer : [];
   const ptr = ans.find(a => a?.type === 12 && typeof a?.data === "string");
@@ -102,9 +107,9 @@ async function reversePTR(ip){
 
 async function fetchRdap(ip){
   const url = `https://rdap.org/ip/${encodeURIComponent(ip)}`;
-  const r = await fetchJson(url);
+  const r = await fetchJson(url, { timeoutMs: 6000 });
   if(!r.ok) return null;
-  return r.data;
+  return (r.data && typeof r.data === "object") ? r.data : null;
 }
 
 function buildMapUrl(lat, lon){
@@ -114,52 +119,110 @@ function buildMapUrl(lat, lon){
   return `https://www.openstreetmap.org/?mlat=${a}&mlon=${b}#map=12/${a}/${b}`;
 }
 
+function firstForwardedFor(req){
+  const h = String(req.headers["x-forwarded-for"] || "");
+  const ip = h.split(",").map(s => s.trim()).find(Boolean);
+  return ip || "";
+}
+
+function parseAsNumber(asString){
+  const s = String(asString || "");
+  const m = s.match(/\bAS(\d+)\b/i);
+  return m ? Number(m[1]) : null;
+}
+
 export default async function handler(req, res) {
-  const ip = (req.query.ip || "").trim();
-  const target = ip && ip.length > 1 ? ip : ""; // empty = caller IP
+  const q = String(req.query.ip || "").trim();
+  const fromHeader = firstForwardedFor(req);
+  const target = q || fromHeader;
 
-  const url = `https://ipapi.co/${encodeURIComponent(target)}/json/`;
-
-  try {
-    const r = await fetch(url, { headers: { "accept": "application/json" } });
-    const data = await r.json().catch(() => ({}));
-    if (!r.ok) {
-      res.status(r.status).json({ error: data?.reason || data?.error || `Upstream error ${r.status}` });
-      return;
-    }
-
-    const ipUsed = (data?.ip || target || "").trim();
-
-    // Derived meta
-    const meta = {
-      ip: ipUsed,
-      ip_version: isIPv4(ipUsed) ? 4 : (isIPv6(ipUsed) ? 6 : 0),
-      fetched_at_iso: new Date().toISOString(),
-    };
-
-    if(isIPv4(ipUsed)) Object.assign(meta, classifyIPv4(ipUsed));
-
-    // Enrichment (best-effort)
-    const [ptr, rdap] = await Promise.all([
-      ipUsed ? reversePTR(ipUsed) : Promise.resolve(null),
-      ipUsed ? fetchRdap(ipUsed) : Promise.resolve(null),
-    ]);
-
-    const map = buildMapUrl(data?.latitude, data?.longitude);
-
+  if(!target){
     res.setHeader("Cache-Control", "no-store");
-    res.status(200).json({
-      ok: true,
-      // Keep original ipapi fields at top-level for existing UI/tools
-      data: {
-        ...data,
-        _meta: meta,
-        _ptr: ptr,
-        _rdap: rdap,
-      },
-      ...(map ? { map } : {}),
-    });
-  } catch (_e) {
-    res.status(500).json({ error: "Network error" });
+    res.status(200).json({ ok:false, error: "Введите IP" });
+    return;
   }
+
+  if(net.isIP(target) === 0){
+    res.setHeader("Cache-Control", "no-store");
+    res.status(200).json({ ok:false, error: "Invalid IP" });
+    return;
+  }
+
+  // ip-api.com free plan is HTTP only. Server-to-server requests are fine.
+  const fields = [
+    "status","message","query",
+    "country","countryCode",
+    "regionName","region",
+    "city","zip",
+    "lat","lon",
+    "timezone",
+    "isp","org",
+    "as","asname",
+    "reverse",
+    "mobile","proxy","hosting",
+  ].join(",");
+  const url = `http://ip-api.com/json/${encodeURIComponent(target)}?fields=${encodeURIComponent(fields)}`;
+  const up = await fetchJson(url, { timeoutMs: 7000 });
+
+  const body = (up.data && typeof up.data === "object") ? up.data : {};
+  const logicalOk = body?.status === "success";
+  if(!up.ok || !logicalOk){
+    const msg = body?.message || (up.status === 429 ? "Rate limit exceeded" : "Upstream error");
+    res.setHeader("Cache-Control", "no-store");
+    res.status(200).json({ ok:false, error: msg, status: up.status || 0 });
+    return;
+  }
+
+  const ipUsed = String(body.query || target).trim();
+  const meta = {
+    ip: ipUsed,
+    ip_version: isIPv4(ipUsed) ? 4 : (isIPv6(ipUsed) ? 6 : 0),
+    fetched_at_iso: new Date().toISOString(),
+  };
+  if(isIPv4(ipUsed)) Object.assign(meta, classifyIPv4(ipUsed));
+
+  const skipNetEnrich = !!(meta.is_private || meta.is_loopback || meta.is_link_local || meta.is_reserved || meta.is_cgnat);
+  const [ptr, rdap] = await Promise.all([
+    ipUsed ? reversePTR(ipUsed) : Promise.resolve(null),
+    (!skipNetEnrich && ipUsed) ? fetchRdap(ipUsed) : Promise.resolve(null),
+  ]);
+
+  const map = buildMapUrl(body.lat, body.lon);
+  const asn = parseAsNumber(body.as);
+
+  // Cache explicit lookups a bit, but do not cache "my IP" derived from headers.
+  if(q){
+    res.setHeader("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=86400");
+  }else{
+    res.setHeader("Cache-Control", "no-store");
+  }
+
+  res.status(200).json({
+    ok: true,
+    data: {
+      ip: ipUsed,
+      country: body.country || "",
+      country_code: body.countryCode || "",
+      region: body.regionName || "",
+      region_code: body.region || "",
+      city: body.city || "",
+      postal: body.zip || "",
+      timezone: body.timezone || "",
+      isp: body.isp || "",
+      organization: body.org || "",
+      as_number: asn,
+      as_text: body.as || "",
+      reverse: body.reverse || "",
+      latitude: body.lat,
+      longitude: body.lon,
+      mobile: body.mobile,
+      proxy: body.proxy,
+      hosting: body.hosting,
+      _meta: meta,
+      _ptr: ptr,
+      _rdap: rdap,
+      _raw: body,
+    },
+    ...(map ? { map } : {}),
+  });
 }
