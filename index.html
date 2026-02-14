@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Username Finder</title>
+  <title>Tools Hub</title>
   <style>
     :root{
-      --bg:#000;
-      --fg:#fff;
+      --bg:#000; --fg:#fff;
       --muted: rgba(255,255,255,.72);
       --muted2: rgba(255,255,255,.55);
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
@@ -19,302 +18,1039 @@
       background:repeating-linear-gradient(to bottom, rgba(255,255,255,.05) 0px, rgba(255,255,255,.05) 1px, transparent 2px, transparent 6px);
       animation:scan 7s linear infinite}
     @keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(24px)}}
-    .wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:18px 14px 44px;display:flex;flex-direction:column;min-height:100%;gap:14px}
 
-    .intro{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000;z-index:50;flex-direction:column;gap:14px;
-      animation:introOut .28s ease-out forwards;animation-delay:5s}
-    @keyframes introOut{to{opacity:0;visibility:hidden}}
-    .intro img{width:140px;height:140px;filter:grayscale(1) contrast(1.15);opacity:.95;image-rendering:pixelated}
-    .intro .t{font-size:12px;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;animation:flicker 1.4s infinite steps(2,end)}
+    .hidden{display:none !important;}
+
+    .gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000;z-index:60;padding:18px}
+    .gateInner{max-width:780px;width:100%;border:1px solid rgba(255,255,255,.22);padding:16px}
+    .gateTitle{font-size:12px;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.92)}
+    .langRow{margin-top:14px;display:grid;grid-template-columns:1fr;gap:10px}
+    @media (min-width: 720px){ .langRow{grid-template-columns:1fr 1fr 1fr;} }
+    .langBtn{
+      border:1px solid rgba(255,255,255,.20);
+      background:#000;
+      color:#fff;
+      padding:12px;
+      cursor:pointer;
+      font-family:var(--mono);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      transition: transform .12s ease, border-color .12s ease;
+      user-select:none;
+    }
+    .langBtn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.45);}
+    .langBtn img{width:160px;height:100px;object-fit:cover;border:1px solid rgba(255,255,255,.16)}
+    .langBtn .l{font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.92)}
+    .gateHint{margin-top:12px;font-size:11px;color:rgba(255,255,255,.55);line-height:1.4}
+
+    .gateLoadBox{margin-top:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+    .gateLoadBox img{width:120px;height:120px;filter:grayscale(1) contrast(1.15);opacity:.95;image-rendering:pixelated}
+    .gateLoadBox .t{font-size:12px;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;animation:flicker 1.2s infinite steps(2,end)}
     @keyframes flicker{0%,49%{opacity:1}50%,100%{opacity:.5}}
 
-    .menu{display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center;padding-top:10px}
-    .brand{text-align:center}
+    .wrap{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:18px 14px 44px;display:flex;flex-direction:column;min-height:100%;gap:14px}
+    .brand{text-align:center;margin-top: 10px;}
     .brand .h{font-size:18px;letter-spacing:1px;text-transform:uppercase;margin:0}
-    .brand .s{margin-top:6px;font-size:12px;color:var(--muted2);line-height:1.4;max-width:720px}
-    .centerBox{width:min(520px,100%);display:flex;flex-direction:column;gap:12px;align-items:stretch;margin-top:6px}
-    .inputRow{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;justify-content:center}
-    .nickInput{flex:1 1 260px;background:#000;color:#fff;border:1px solid rgba(255,255,255,.25);padding:12px 12px;font-family:var(--mono);font-size:13px;outline:none;transition:border-color .15s ease}
-    .nickInput:focus{border-color:rgba(255,255,255,.70)}
-    .btn{padding:12px 14px;font-family:var(--mono);font-size:13px;cursor:pointer;border:1px solid #fff;background:#fff;color:#000;transition:transform .1s ease, opacity .1s ease;user-select:none;min-width:120px}
-    .btn:active{transform:translateY(1px)}
+    .brand .s{margin-top:6px;font-size:12px;color:var(--muted2);line-height:1.4;max-width:860px; margin-inline:auto}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top: 10px;}
+    @media (min-width: 860px){ .grid{grid-template-columns:1fr 1fr;} }
+
+    .card{
+      border:1px solid rgba(255,255,255,.20);
+      padding:12px;
+      cursor:pointer;
+      transition: transform .12s ease, border-color .12s ease;
+      background:#000;
+    }
+    .card:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.45);}
+    .card .name{font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.92)}
+
+    .panel{
+      border:1px solid rgba(255,255,255,.22);
+      padding:12px;
+      margin-top: 14px;
+      display:none;
+    }
+    .panel.open{display:block}
+    .panelTop{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+    .panelTitle{font-size:12px;letter-spacing:.6px;text-transform:uppercase}
+    .btnRow{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .btn{
+      padding:10px 12px;
+      font-family:var(--mono);
+      font-size:12px;
+      cursor:pointer;
+      border:1px solid #fff;
+      background:#fff;
+      color:#000;
+      user-select:none;
+    }
     .btn:disabled{opacity:.5;cursor:not-allowed}
-    .btn.secondary{background:#000;color:#fff;border:1px solid rgba(255,255,255,.35);min-width:160px}
-    .status{text-align:center;font-size:12px;color:rgba(255,255,255,.70);min-height:18px;margin-top:6px}
+    .btn.secondary{background:#000;color:#fff;border:1px solid rgba(255,255,255,.35)}
+    .fieldRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .input{
+      flex:1 1 280px;
+      background:#000;
+      color:#fff;
+      border:1px solid rgba(255,255,255,.25);
+      padding:10px 10px;
+      font-family:var(--mono);
+      font-size:12px;
+      outline:none;
+    }
+    .input:focus{border-color:rgba(255,255,255,.70)}
+    .out{
+      margin-top:12px;
+      border:1px solid rgba(255,255,255,.20);
+      padding:12px;
+      font-size:12px;
+      line-height:1.45;
+      white-space:pre-wrap;
+      overflow:auto;
+      max-height: 46vh;
+    }
+    .out img.qr{
+      display:block;
+      width:min(220px, 78vw);
+      height:auto;
+      border:1px solid rgba(255,255,255,.22);
+      margin-bottom:10px;
+      image-rendering:auto;
+    }
+    a{color:#fff; text-decoration: underline; text-underline-offset: 3px}
+  
+    /* Pretty results */
+    .out{white-space:normal; word-break:break-word;}
+    .resultBox{border:1px solid rgba(255,255,255,.20); padding:12px;}
+    .resultTop{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px;}
+    .badge{display:inline-flex; align-items:center; justify-content:center; padding:4px 8px; border:1px solid rgba(255,255,255,.35); font-size:11px; text-transform:uppercase; letter-spacing:.6px;}
+    .badge.ok{background:#fff; color:#000; border-color:#fff;}
+    .badge.bad{background:#000; color:#fff;}
+    .resultTool{font-size:12px; color:rgba(255,255,255,.92); letter-spacing:.4px;}
+    .rows{display:flex; flex-direction:column; gap:8px;}
+    .row{display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap;}
+    .k{min-width:140px; color:rgba(255,255,255,.55); font-size:11px; text-transform:uppercase; letter-spacing:.6px;}
+    .v{flex:1 1 300px; font-size:12px; color:rgba(255,255,255,.92);}
+    .pill{display:inline-flex; align-items:center; justify-content:center; padding:2px 8px; border:1px solid rgba(255,255,255,.28); font-size:11px; margin-right:8px; margin-bottom:6px;}
+    .pill.ok{background:#fff; color:#000; border-color:#fff;}
+    .pill.bad{background:#000; color:#fff;}
+    .list{border:1px solid rgba(255,255,255,.18); padding:10px; display:flex; flex-direction:column; gap:6px;}
+    .item{display:flex; gap:10px; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(255,255,255,.10); padding-bottom:6px;}
+    .item:last-child{border-bottom:none; padding-bottom:0;}
+    .code{font-family:var(--mono); font-size:12px; color:#fff; overflow:auto;}
+    .miniBtn{padding:6px 10px; font-family:var(--mono); font-size:11px; cursor:pointer; border:1px solid rgba(255,255,255,.35); background:#000; color:#fff;}
+    .miniBtn:hover{border-color:rgba(255,255,255,.60);}
+    details.raw{margin-top:10px; border-top:1px solid rgba(255,255,255,.16); padding-top:10px;}
+    details.raw summary{cursor:pointer; color:rgba(255,255,255,.72); font-size:11px; text-transform:uppercase; letter-spacing:.6px;}
+    details.raw pre{margin:10px 0 0; white-space:pre; overflow:auto; max-height:34vh; border:1px solid rgba(255,255,255,.12); padding:10px;}
+    .loadingRow{display:flex; align-items:center; gap:10px; color:rgba(255,255,255,.72); font-size:12px;}
+    .loadingGif{width:18px; height:18px; image-rendering:auto; border:1px solid rgba(255,255,255,.18);}
+    table.kv{width:100%; border-collapse:collapse; font-size:12px;}
+    table.kv td{border-bottom:1px solid rgba(255,255,255,.12); padding:6px 0; vertical-align:top;}
+    table.kv td:first-child{color:rgba(255,255,255,.55); font-size:11px; text-transform:uppercase; letter-spacing:.6px; width:180px; padding-right:12px;}
 
-    .terminal{width:100%;border:1px solid rgba(255,255,255,.20);padding:12px;margin-top:10px;max-height:44vh;overflow:auto;font-size:12px;line-height:1.45;white-space:pre-wrap;color:rgba(255,255,255,.86)}
-    .logMuted{color:rgba(255,255,255,.55)}
-    .logOk{color:rgba(255,255,255,.95)}
-    .logErr{color:rgba(255,255,255,.50);text-decoration:underline dotted rgba(255,255,255,.25)}
-
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px 14px;background:rgba(0,0,0,.82);z-index:60}
-    .modal.open{display:flex}
-    .modalBox{width:min(760px,100%);background:#000;border:1px solid rgba(255,255,255,.25);padding:14px;max-height:80vh;overflow:auto}
-    .modalTop{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-    .modalTitle{font-size:13px;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.88)}
-    .foundTools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
-    .foundList{display:grid;grid-template-columns:1fr;gap:10px}
-    @media (min-width:760px){.foundList{grid-template-columns:1fr 1fr}}
-    .foundItem{border:1px solid rgba(255,255,255,.18);padding:10px;display:flex;flex-direction:column;gap:6px}
-    .foundItem .name{font-size:12px;color:rgba(255,255,255,.88);text-transform:uppercase;letter-spacing:.4px}
-    .foundItem a{color:#fff;text-decoration:underline;text-underline-offset:3px;font-size:12px;overflow-wrap:anywhere;opacity:.9}
-    .foundItem a:hover{opacity:1}
-
-    .footer{margin-top:auto;text-align:center;font-size:11px;color:rgba(255,255,255,.38);padding-top:10px}
   </style>
 </head>
 <body>
   <div class="bgNoise"></div>
 
-  <div class="intro" id="intro" aria-hidden="false">
-    <img src="/public/loading.gif" alt="loading">
-    <div class="t">loading...</div>
-  </div>
-
-  <div class="modal" id="modal">
-    <div class="modalBox">
-      <div class="modalTop">
-        <div class="modalTitle" id="modalTitle">Найдено</div>
-        <div class="foundTools">
-          <button class="btn secondary" id="btnMainMenu">Главное меню</button>
-          <button class="btn" id="btnDownload" disabled>Скачать HTML</button>
-        </div>
+  <div class="gate" id="gate">
+    <div class="gateInner" id="gatePick">
+      <div class="gateTitle" id="gateTitle">Выбери язык</div>
+      <div class="langRow">
+        <button class="langBtn" data-lang="uk" type="button">
+          <img src="public/flag_ua.gif" alt="ua">
+          <div class="l">Українська</div>
+        </button>
+        <button class="langBtn" data-lang="ru" type="button">
+          <img src="public/flag_ru.gif" alt="ru">
+          <div class="l">Русский</div>
+        </button>
+        <button class="langBtn" data-lang="en" type="button">
+          <img src="public/flag_en.gif" alt="en">
+          <div class="l">English</div>
+        </button>
       </div>
-      <div class="foundList" id="foundList"></div>
-      <div class="status" id="modalStatus"></div>
+      <div class="gateHint" id="gateHint"></div>
+    </div>
+
+    <div class="gateInner hidden" id="gateLoad">
+      <div class="gateLoadBox">
+        <img src="public/loading.gif" alt="loading">
+        <div class="t" id="gateLoadTitle">Loading...</div>
+        <div class="gateHint" id="gateLoadHint"></div>
+      </div>
     </div>
   </div>
 
-  <div class="wrap">
-    <div class="menu" id="menu">
-      <div class="brand">
-        <p class="h">Username Finder</p>
-        <div class="s">Вводишь ник — получаешь найденные публичные страницы. Чтобы снизить “сбой сети”, тут уменьшены батчи и параллельность.</div>
-      </div>
-
-      <div class="centerBox">
-        <div class="inputRow">
-          <input class="nickInput" id="username" placeholder="ник (2..64)" autocomplete="off" />
-          <button class="btn" id="btnSearch">Поиск</button>
-        </div>
-
-        <div class="status" id="statusLine">Готов.</div>
-
-        <div class="terminal" id="terminal" aria-live="polite"></div>
-
-        <div class="inputRow" style="justify-content:center">
-          <button class="btn secondary" id="btnClear">Очистить логи</button>
-        </div>
-      </div>
+  <div class="wrap hidden" id="wrap">
+    <div class="brand">
+      <p class="h" id="brandTitle">Tools Hub</p>
+      <div class="s" id="brandSub"></div>
     </div>
 
-    <div class="footer">Vercel edition. соблюдай правила сайтов.</div>
+    <div class="grid" id="cards"></div>
+
+    <div class="panel" id="panel">
+      <div class="panelTop">
+        <div class="panelTitle" id="panelTitle">Tool</div>
+        <div class="btnRow">
+          <button class="btn secondary" id="btnHome">Закрыть</button>
+          <button class="btn" id="btnRun">Run</button>
+        </div>
+      </div>
+
+      <div class="fieldRow" id="fields"></div>
+      <div class="out" id="out"></div>
+    </div>
   </div>
 
 <script>
-  const $ = (id) => document.getElementById(id);
+  const $ = (id)=>document.getElementById(id);
+  const cardsEl = $("cards");
+  const panel = $("panel");
+  const panelTitle = $("panelTitle");
+  const fieldsEl = $("fields");
+  const outEl = $("out");
+  const btnHome = $("btnHome");
+  const btnRun = $("btnRun");
+  const gate = $("gate");
+  const wrap = $("wrap");
+  const brandTitle = $("brandTitle");
+  const brandSub = $("brandSub");
+  const gateTitle = $("gateTitle");
+  const gateHint = $("gateHint");
+  const gatePick = $("gatePick");
+  const gateLoad = $("gateLoad");
+  const gateLoadTitle = $("gateLoadTitle");
+  const gateLoadHint = $("gateLoadHint");
 
-  const btnSearch = $("btnSearch");
-  const btnClear = $("btnClear");
-  const statusLine = $("statusLine");
-  const terminal = $("terminal");
+  let current = null;
+  let LANG = "ru";
 
-  const modal = $("modal");
-  const foundList = $("foundList");
-  const modalTitle = $("modalTitle");
-  const modalStatus = $("modalStatus");
-  const btnMainMenu = $("btnMainMenu");
-  const btnDownload = $("btnDownload");
+  const UI = {
+    ru: {
+      gateTitle: "Выбери язык",
+      gateHint: "",
+      brandTitle: "Tools Hub",
+      brandSub: "",
+      close: "Закрыть",
+      running: "выполняю...",
+      openMap: "Открыть карту",
+      error: "Ошибка",
+      success: "Готово",
+      fail: "Ошибка",
+      raw: "Raw JSON",
+      copy: "Копировать",
+      copied: "Скопировано",
+      loading: "Загружаю..."
+    },
+    uk: {
+      gateTitle: "Обери мову",
+      gateHint: "",
+      brandTitle: "Tools Hub",
+      brandSub: "",
+      close: "Закрити",
+      running: "виконую...",
+      openMap: "Відкрити мапу",
+      error: "Помилка",
+      success: "Готово",
+      fail: "Помилка",
+      raw: "Raw JSON",
+      copy: "Копіювати",
+      copied: "Скопійовано",
+      loading: "Завантажую..."
+    },
+    en: {
+      gateTitle: "Choose language",
+      gateHint: "",
+      brandTitle: "Tools Hub",
+      brandSub: "",
+      close: "Close",
+      running: "running...",
+      openMap: "Open map",
+      error: "Error",
+      success: "Done",
+      fail: "Error",
+      raw: "Raw JSON",
+      copy: "Copy",
+      copied: "Copied",
+      loading: "Loading..."
+    }
+  };
 
-  let last = { username: null, total: 0, results: [], found: [] };
+  const tools = [
+    {
+      id:"ip",
+      name:{ru:"IP Lookup", uk:"IP Lookup", en:"IP Lookup"},
+      action:{ru:"Проверить IP", uk:"Перевірити IP", en:"Check IP"},
+      fields:[{k:"ip", ph:{ru:"IP (пусто = мой IP)", uk:"IP (порожньо = мій IP)", en:"IP (empty = my IP)"}}],
+      run: async (v)=> apiJson(`/api/ip?ip=${encodeURIComponent(v.ip||"")}`)
+    },
+    {
+      id:"geo",
+      name:{ru:"IP Geolocation Map", uk:"IP Geolocation Map", en:"IP Geolocation Map"},
+      action:{ru:"Показать карту", uk:"Показати мапу", en:"Show map"},
+      fields:[{k:"ip", ph:{ru:"IP (пусто = мой IP)", uk:"IP (порожньо = мій IP)", en:"IP (empty = my IP)"}}],
+      run: async (v)=> {
+        const r = await apiJson(`/api/ip?ip=${encodeURIComponent(v.ip||"")}`);
+        const d = r.data || {};
+        const lat = d.latitude, lon = d.longitude;
+        if (lat && lon) r.map = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=12/${lat}/${lon}`;
+        return r;
+      }
+    },
+    {
+      id:"whois",
+      name:{ru:"WHOIS Lookup", uk:"WHOIS Lookup", en:"WHOIS Lookup"},
+      action:{ru:"Проверить WHOIS", uk:"Перевірити WHOIS", en:"Check WHOIS"},
+      fields:[{k:"domain", ph:{ru:"domain.com", uk:"domain.com", en:"domain.com"}}],
+      run: async (v)=> apiJson(`/api/whois?domain=${encodeURIComponent(v.domain||"")}`)
+    },
+    {
+      id:"headers",
+      name:{ru:"HTTP Header Check", uk:"HTTP Header Check", en:"HTTP Header Check"},
+      action:{ru:"Проверить заголовки", uk:"Перевірити заголовки", en:"Check headers"},
+      fields:[{k:"url", ph:{ru:"https://example.com", uk:"https://example.com", en:"https://example.com"}}],
+      run: async (v)=> apiJson(`/api/headers?url=${encodeURIComponent(v.url||"")}`)
+    },
+    {
+      id:"email",
+      name:{ru:"Email Validator", uk:"Email Validator", en:"Email Validator"},
+      action:{ru:"Проверить email", uk:"Перевірити email", en:"Validate email"},
+      fields:[{k:"email", ph:{ru:"name@example.com", uk:"name@example.com", en:"name@example.com"}}],
+      run: async (v)=> {
+        const e = (v.email||"").trim();
+        return apiJson(`/api/email?email=${encodeURIComponent(e)}`);
+      }
+    },
+    {
+      id:"qr",
+      name:{ru:"QR Code Generator", uk:"QR Code Generator", en:"QR Code Generator"},
+      action:{ru:"Сгенерировать QR", uk:"Згенерувати QR", en:"Generate QR"},
+      fields:[{k:"text", ph:{ru:"текст или ссылка", uk:"текст або посилання", en:"text or link"}}],
+      run: async (v)=> {
+        const t = (v.text||"").trim();
+        if(!t) throw new Error("Empty text");
+        const url = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(t)}`;
+        return { ok:true, qr_url: url };
+      }
+    },
+    {
+      id:"discord",
+      name:{ru:"Discord Lookup (ID)", uk:"Discord Lookup (ID)", en:"Discord Lookup (ID)"},
+      action:{ru:"Декодировать ID", uk:"Декодувати ID", en:"Decode ID"},
+      fields:[{k:"id", ph:{ru:"Discord ID (snowflake)", uk:"Discord ID (snowflake)", en:"Discord ID (snowflake)"}}],
+      run: async (v)=> {
+        const s = (v.id||"").trim();
+        if(!/^\d{15,20}$/.test(s)) throw new Error("Invalid snowflake");
+        const n = BigInt(s);
+        const discordEpoch = 1420070400000n;
+        const ts = Number((n >> 22n) + discordEpoch);
+        return { ok:true, id:s, created_at_iso: new Date(ts).toISOString() };
+      }
+    },
+    {
+      id:"pass",
+      name:{ru:"Password Generator", uk:"Password Generator", en:"Password Generator"},
+      action:{ru:"Сгенерировать", uk:"Згенерувати", en:"Generate"},
+      fields:[
+        {k:"len", ph:{ru:"длина (по умолчанию 16)", uk:"довжина (за замовч. 16)", en:"length (default 16)"}},
+        {k:"count", ph:{ru:"сколько (по умолчанию 5)", uk:"скільки (за замовч. 5)", en:"count (default 5)"}}
+      ],
+      run: async (v)=> {
+        const L = Math.min(Math.max(parseInt(v.len||"16",10)||16, 8), 64);
+        const C = Math.min(Math.max(parseInt(v.count||"5",10)||5, 1), 30);
+        const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*_-+=";
+        const out = [];
+        for(let i=0;i<C;i++){
+          const buf = new Uint32Array(L);
+          crypto.getRandomValues(buf);
+          let p = "";
+          for(let j=0;j<L;j++) p += chars[buf[j] % chars.length];
+          out.push(p);
+        }
+        return { ok:true, length:L, count:C, passwords: out };
+      }
+    },
+    {
+      id:"github",
+      name:{ru:"GitHub Search", uk:"GitHub Search", en:"GitHub Search"},
+      action:{ru:"Искать", uk:"Шукати", en:"Search"},
+      fields:[
+        {k:"q", ph:{ru:"запрос (например: nickname)", uk:"запит (наприклад: nickname)", en:"query (e.g. nickname)"}},
+        {k:"type", ph:{ru:"users или repositories", uk:"users або repositories", en:"users or repositories"}}
+      ],
+      run: async (v)=> apiJson(`/api/github?q=${encodeURIComponent(v.q||"")}&type=${encodeURIComponent(v.type||"users")}`)
+    },
+    {
+      id:"subs",
+      name:{ru:"Subdomain Finder", uk:"Subdomain Finder", en:"Subdomain Finder"},
+      action:{ru:"Найти", uk:"Знайти", en:"Find"},
+      fields:[{k:"domain", ph:{ru:"example.com", uk:"example.com", en:"example.com"}}],
+      run: async (v)=> apiJson(`/api/subdomains?domain=${encodeURIComponent(v.domain||"")}`)
+    },
+    {
+      id:"port",
+      name:{ru:"Port Scanner", uk:"Port Scanner", en:"Port Scanner"},
+      action:{ru:"Недоступно", uk:"Недоступно", en:"Unavailable"},
+      fields:[{k:"host", ph:{ru:"host", uk:"host", en:"host"}}],
+      run: async (_)=> ({ ok:false, error:"Not implemented" })
+    },
+    {
+      id:"proxy",
+      name:{ru:"Proxy Checker", uk:"Proxy Checker", en:"Proxy Checker"},
+      action:{ru:"Недоступно", uk:"Недоступно", en:"Unavailable"},
+      fields:[{k:"proxy", ph:{ru:"ip:port", uk:"ip:port", en:"ip:port"}}],
+      run: async (_)=> ({ ok:false, error:"Not implemented" })
+    }
+  ];
 
-  function esc(s){
-    return (s||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+  function tr(obj){
+    if(!obj) return "";
+    if(typeof obj === "string") return obj;
+    return obj[LANG] || obj.ru || obj.en || "";
   }
-  function log(line, cls=""){
-    const ts = new Date().toLocaleTimeString();
-    const div = document.createElement("div");
-    if (cls) div.className = cls;
-    div.textContent = `[${ts}] ${line}`;
-    terminal.appendChild(div);
-    terminal.scrollTop = terminal.scrollHeight;
-  }
-  function clearLogs(){
-    terminal.innerHTML = "";
-    log("logs cleared.", "logMuted");
-  }
-  btnClear.addEventListener("click", clearLogs);
 
-  async function api(url, tries=2){
-    let lastErr = null;
-    for (let i=0; i<tries; i++){
-      try{
-        const res = await fetch(url, { cache:"no-store" });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "API error");
-        return data;
-      }catch(e){
-        lastErr = e;
-        await new Promise(r => setTimeout(r, 350 + i*650));
+  function applyLang(lang){
+    LANG = (lang === "uk" || lang === "ru" || lang === "en") ? lang : "ru";
+    document.documentElement.lang = LANG;
+    gateTitle.textContent = UI[LANG].gateTitle;
+    gateHint.textContent = UI[LANG].gateHint || "";
+    brandTitle.textContent = UI[LANG].brandTitle;
+    brandSub.textContent = UI[LANG].brandSub || "";
+    btnHome.textContent = UI[LANG].close;
+    gateLoadTitle.textContent = UI[LANG].loading;
+    gateLoadHint.textContent = "";
+  }
+
+  function renderCards(){
+    cardsEl.innerHTML = "";
+    for(const t of tools){
+      const d = document.createElement("div");
+      d.className = "card";
+      d.innerHTML = `<div class="name">${tr(t.name)}</div>`;
+      d.onclick = ()=>openTool(t.id);
+      cardsEl.appendChild(d);
+    }
+  }
+
+  function openTool(id){
+    current = tools.find(x=>x.id===id);
+    if(!current) return;
+    panelTitle.textContent = tr(current.name);
+    btnRun.textContent = tr(current.action) || "Run";
+    fieldsEl.innerHTML = "";
+    outEl.textContent = "";
+    for(const f of (current.fields || [])){
+      const inp = document.createElement("input");
+      inp.className = "input";
+      inp.placeholder = tr(f.ph) || f.k;
+      inp.dataset.key = f.k;
+      fieldsEl.appendChild(inp);
+    }
+    panel.classList.add("open");
+    window.scrollTo({ top: panel.offsetTop - 8, behavior: "smooth" });
+  }
+
+  btnHome.onclick = ()=>{
+    panel.classList.remove("open");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  async function apiJson(url){
+    const r = await fetch(url, { cache:"no-store" });
+    const data = await r.json().catch(()=> ({}));
+    if(!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+    return data;
+  }
+
+  
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function isUrl(s){
+    if(typeof s !== "string") return false;
+    return /^https?:\/\/\S+$/i.test(s);
+  }
+
+  function pill(text, ok){
+    const sp = document.createElement("span");
+    sp.className = "pill " + (ok ? "ok" : "bad");
+    sp.textContent = text;
+    return sp;
+  }
+
+  function row(label, valueNodeOrText){
+    const r = document.createElement("div");
+    r.className = "row";
+    const k = document.createElement("div");
+    k.className = "k";
+    k.textContent = label;
+    const v = document.createElement("div");
+    v.className = "v";
+    if (valueNodeOrText instanceof Node) v.appendChild(valueNodeOrText);
+    else v.textContent = valueNodeOrText == null ? "" : String(valueNodeOrText);
+    r.appendChild(k); r.appendChild(v);
+    return r;
+  }
+
+  function showRunning(){
+    outEl.innerHTML = `<div class="loadingRow"><img class="loadingGif" src="public/loading.gif" alt=""><div>${escapeHtml(UI[LANG].running)}</div></div>`;
+  }
+
+  function renderError(err){
+    const msg = String(err?.message || err || UI[LANG].error);
+    renderResult({ ok:false, error: msg });
+  }
+
+  function pick(obj, keys){
+    const out = {};
+    for(const k of keys){
+      if(obj && obj[k] != null && obj[k] !== "") out[k] = obj[k];
+    }
+    return out;
+  }
+
+  function extractVCardEmails(entity){
+    const vc = entity?.vcardArray;
+    const rows = Array.isArray(vc) ? vc[1] : null;
+    if(!Array.isArray(rows)) return [];
+    const out = [];
+    for(const r of rows){
+      if(Array.isArray(r) && String(r[0]).toLowerCase() === "email"){
+        const v = r[3];
+        if(typeof v === "string" && v.trim()) out.push(v.trim());
       }
     }
-    throw lastErr;
+    return out;
   }
 
-  function setBusy(on){
-    btnSearch.disabled = on;
-    statusLine.textContent = on ? "Ищу данные…" : "Готов.";
-  }
-  function openModal(){ modal.classList.add("open"); }
-  function closeModal(){ modal.classList.remove("open"); }
-  btnMainMenu.addEventListener("click", () => { closeModal(); statusLine.textContent = "Готов."; });
-
-  function buildFound(results){
-    const found = results.filter(r => r.verdict === "maybe").map(r => ({
-      name: r.name,
-      url: (r.finalUrl || r.url),
-      kind: r.kind,
-      status: r.status
-    }));
-    const seen = new Set();
-    const uniq = [];
-    for (const f of found){
-      if (seen.has(f.url)) continue;
-      seen.add(f.url);
-      uniq.push(f);
+  function extractRdapEmails(rdap){
+    const ents = Array.isArray(rdap?.entities) ? rdap.entities : [];
+    const out = [];
+    for(const e of ents){
+      const roles = Array.isArray(e?.roles) ? e.roles.map(x=>String(x).toLowerCase()) : [];
+      const important = roles.some(r => ["abuse","noc","technical","administrative","registrant"].includes(r));
+      if(!important) continue;
+      out.push(...extractVCardEmails(e));
     }
-    return uniq;
+    return Array.from(new Set(out));
   }
 
-  function renderFound(){
-    foundList.innerHTML = "";
-    if (!last.found.length){
-      foundList.innerHTML = `<div class="foundItem"><div class="name">Ничего не найдено</div><div class="logMuted">Попробуй другой ник или проверь вручную.</div></div>`;
-      return;
+  function renderGenericKV(obj){
+    const rows = document.createElement("div");
+    rows.className = "rows";
+
+    if(!obj || typeof obj !== "object"){
+      rows.appendChild(row("result", obj));
+      return rows;
     }
-    for (const item of last.found){
-      const div = document.createElement("div");
-      div.className = "foundItem";
-      div.innerHTML = `<div class="name">${esc(item.name)}</div>
-                       <a href="${esc(item.url)}" target="_blank" rel="noreferrer">${esc(item.url)}</a>`;
-      foundList.appendChild(div);
+
+    const base = (obj && obj.data && typeof obj.data === "object") ? obj.data : obj;
+    const keys = Object.keys(base).slice(0, 12);
+
+    for(const k of keys){
+      const val = base[k];
+      if(val == null) continue;
+
+      if(typeof val === "boolean"){
+        const box = document.createElement("div");
+        box.appendChild(pill(val ? "YES" : "NO", !!val));
+        rows.appendChild(row(k, box));
+        continue;
+      }
+
+      if(Array.isArray(val)){
+        const list = document.createElement("div");
+        list.className = "list";
+        const show = val.slice(0, 25);
+        for(const item of show){
+          const it = document.createElement("div");
+          it.className = "item";
+          const code = document.createElement("div");
+          code.className = "code";
+          code.textContent = String(item);
+          const btn = document.createElement("button");
+          btn.className = "miniBtn";
+          btn.type = "button";
+          btn.textContent = UI[LANG].copy;
+          btn.setAttribute("data-copy", String(item));
+          it.appendChild(code);
+          it.appendChild(btn);
+          list.appendChild(it);
+        }
+        if(val.length > show.length){
+          const more = document.createElement("div");
+          more.style.color = "rgba(255,255,255,.55)";
+          more.textContent = `+${val.length - show.length} more`;
+          list.appendChild(more);
+        }
+        rows.appendChild(row(k, list));
+        continue;
+      }
+
+      if(typeof val === "object"){
+        rows.appendChild(row(k, "[object]"));
+        continue;
+      }
+
+      if(isUrl(String(val))){
+        const a = document.createElement("a");
+        a.href = String(val); a.target="_blank"; a.rel="noreferrer";
+        a.textContent = String(val);
+        rows.appendChild(row(k, a));
+        continue;
+      }
+
+      rows.appendChild(row(k, String(val)));
     }
+    return rows;
   }
 
-  function buildReportHTML(){
-    const username = last.username;
-    const now = new Date().toISOString();
-    const found = last.found;
-    const cards = found.map(f => `
-      <div class="card">
-        <div class="name">${esc(f.name)}</div>
-        <a href="${esc(f.url)}">${esc(f.url)}</a>
-      </div>
-    `).join("");
+  function renderHeaders(data){
+    const base = data?.data ? data.data : data;
+    const rows = document.createElement("div");
+    rows.className = "rows";
+    rows.appendChild(row("url", base.url || ""));
+    if(base.status != null) rows.appendChild(row("status", String(base.status)));
 
-    return `<!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Report: ${esc(username)}</title>
-<style>
-  body{margin:0;background:#000;color:#fff;font-family:ui-monospace,Menlo,Consolas,monospace;padding:22px}
-  h1{font-size:16px;letter-spacing:1px;text-transform:uppercase;margin:0}
-  .meta{margin-top:8px;color:rgba(255,255,255,.68);font-size:12px;line-height:1.45}
-  .grid{margin-top:14px;display:grid;grid-template-columns:1fr;gap:10px}
-  @media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
-  .card{border:1px solid rgba(255,255,255,.22);padding:12px}
-  .name{font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.88);margin-bottom:6px}
-  a{color:#fff;text-decoration:underline;text-underline-offset:3px;word-break:break-word;opacity:.9}
-  a:hover{opacity:1}
-  .footer{margin-top:18px;color:rgba(255,255,255,.65);font-size:12px}
-</style></head>
-<body>
-  <h1>Username Finder Report</h1>
-  <div class="meta">username: <b>${esc(username)}</b><br>generated: ${esc(now)}<br>found: ${found.length}</div>
-  <div class="grid">${cards || '<div class="card"><div class="name">Ничего не найдено</div><div class="meta">Нет ссылок с вердиктом "возможно".</div></div>'}</div>
-  <div class="footer">спасибо за поддержку</div>
-</body></html>`;
+    const headers = base.headers || {};
+    const table = document.createElement("table");
+    table.className = "kv";
+    for(const k of Object.keys(headers)){
+      const tr = document.createElement("tr");
+      const td1 = document.createElement("td"); td1.textContent = k;
+      const td2 = document.createElement("td"); td2.textContent = headers[k];
+      tr.appendChild(td1); tr.appendChild(td2);
+      table.appendChild(tr);
+    }
+    rows.appendChild(row("headers", table));
+    return rows;
   }
 
-  btnDownload.addEventListener("click", () => {
-    if (!last.username) return;
-    const html = buildReportHTML();
-    const blob = new Blob([html], {type:"text/html;charset=utf-8"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `report-${last.username}.html`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-    modalStatus.textContent = "Файл скачан.";
+  function renderEmail(data){
+    const d = data?.data ? data.data : data;
+    const rows = document.createElement("div");
+    rows.className = "rows";
+
+    const syntaxOk = !!d.valid_syntax;
+    const deliverable = d.deliverable === true;
+    const disposable = d.disposable === true;
+
+    rows.appendChild(row("email", d.email_address || d.email || ""));
+    if(d.domain) rows.appendChild(row("domain", d.domain));
+
+    const flags = document.createElement("div");
+    flags.appendChild(pill("SYNTAX " + (syntaxOk ? "OK" : "BAD"), syntaxOk));
+    if(d.deliverable != null) flags.appendChild(pill("DELIVERABLE " + (deliverable ? "YES" : "NO"), deliverable));
+    if(d.disposable != null) flags.appendChild(pill("DISPOSABLE " + (disposable ? "YES" : "NO"), !disposable));
+    rows.appendChild(row("check", flags));
+
+    return rows;
+  }
+
+  function renderWhois(data){
+    const rdap = data?.data ? data.data : data;
+    const rows = document.createElement("div");
+    rows.className = "rows";
+
+    const name = rdap?.ldhName || rdap?.unicodeName || "";
+    if(name) rows.appendChild(row("domain", name));
+
+    if(Array.isArray(rdap?.status) && rdap.status.length){
+      rows.appendChild(row("status", rdap.status.join(", ")));
+    }
+
+    const ev = Array.isArray(rdap?.events) ? rdap.events : [];
+    const wanted = ["registration", "expiration", "last changed", "last update of rdap database"];
+    for(const w of wanted){
+      const e = ev.find(x => (x?.eventAction||"").toLowerCase() === w);
+      if(e && e.eventDate) rows.appendChild(row(w, e.eventDate));
+    }
+
+    return rows;
+  }
+
+  function renderGithub(data){
+    const d = data?.data ? data.data : data;
+    const rows = document.createElement("div");
+    rows.className = "rows";
+
+    if(d.total_count != null) rows.appendChild(row("total", String(d.total_count)));
+
+    const items = Array.isArray(d.items) ? d.items.slice(0, 20) : [];
+    const list = document.createElement("div");
+    list.className = "list";
+
+    for(const it of items){
+      const line = document.createElement("div");
+      line.className = "item";
+      const left = document.createElement("div");
+      left.className = "code";
+
+      const url = it.html_url || it.url;
+      const title = it.full_name || it.login || it.name || "item";
+      if(url){
+        const a = document.createElement("a");
+        a.href = url; a.target="_blank"; a.rel="noreferrer";
+        a.textContent = title;
+        left.appendChild(a);
+      }else{
+        left.textContent = title;
+      }
+
+      const btn = document.createElement("button");
+      btn.className = "miniBtn";
+      btn.type = "button";
+      btn.textContent = UI[LANG].copy;
+      btn.setAttribute("data-copy", url || title);
+
+      line.appendChild(left);
+      line.appendChild(btn);
+      list.appendChild(line);
+    }
+
+    rows.appendChild(row("results", list));
+    return rows;
+  }
+
+  function renderPasswords(data){
+    const d = data?.data ? data.data : data;
+    const rows = document.createElement("div");
+    rows.className = "rows";
+    const arr = d.passwords || [];
+    const list = document.createElement("div");
+    list.className = "list";
+    for(const p of arr){
+      const line = document.createElement("div");
+      line.className = "item";
+      const code = document.createElement("div");
+      code.className = "code";
+      code.textContent = p;
+      const btn = document.createElement("button");
+      btn.className = "miniBtn";
+      btn.type = "button";
+      btn.textContent = UI[LANG].copy;
+      btn.setAttribute("data-copy", p);
+      line.appendChild(code);
+      line.appendChild(btn);
+      list.appendChild(line);
+    }
+    rows.appendChild(row("passwords", list));
+    return rows;
+  }
+
+  function renderSubdomains(data){
+    const d = data?.data ? data.data : data;
+    const rows = document.createElement("div");
+    rows.className = "rows";
+    if(d.domain) rows.appendChild(row("domain", d.domain));
+    if(d.count != null) rows.appendChild(row("count", String(d.count)));
+    if(Array.isArray(d.subdomains)){
+      const list = document.createElement("div");
+      list.className = "list";
+      for(const s of d.subdomains.slice(0, 250)){
+        const line = document.createElement("div");
+        line.className = "item";
+        const code = document.createElement("div"); code.className="code"; code.textContent = s;
+        const btn = document.createElement("button");
+        btn.className="miniBtn"; btn.type="button"; btn.textContent = UI[LANG].copy;
+        btn.setAttribute("data-copy", s);
+        line.appendChild(code); line.appendChild(btn);
+        list.appendChild(line);
+      }
+      rows.appendChild(row("subdomains", list));
+    }
+    return rows;
+  }
+
+  function renderIP(data){
+    const d = data?.data ? data.data : data;
+    const rows = document.createElement("div");
+    rows.className = "rows";
+
+    const meta = (d && typeof d._meta === "object" && d._meta) ? d._meta : {};
+    const rdap = (d && typeof d._rdap === "object" && d._rdap) ? d._rdap : null;
+    const ip = d?.ip || meta?.ip || "";
+
+    // Identity
+    rows.appendChild(row("ip", ip));
+    if(meta.ip_version) rows.appendChild(row("ip_version", String(meta.ip_version)));
+    if(d?._ptr) rows.appendChild(row("reverse_dns", d._ptr));
+    if(meta.fetched_at_iso) rows.appendChild(row("fetched_at", meta.fetched_at_iso));
+
+    // Flags (showing "good" when FALSE for risky flags)
+    const flags = document.createElement("div");
+    const flagItems = [
+      { label:"PRIVATE", value: meta.is_private, goodWhenFalse:true },
+      { label:"LOOPBACK", value: meta.is_loopback, goodWhenFalse:true },
+      { label:"LINK_LOCAL", value: meta.is_link_local, goodWhenFalse:true },
+      { label:"CGNAT", value: meta.is_cgnat, goodWhenFalse:true },
+      { label:"MULTICAST", value: meta.is_multicast, goodWhenFalse:true },
+      { label:"RESERVED", value: meta.is_reserved, goodWhenFalse:true },
+    ];
+    for(const it of flagItems){
+      if(it.value == null) continue;
+      const yes = !!it.value;
+      const ok = it.goodWhenFalse ? !yes : yes;
+      flags.appendChild(pill(`${it.label} ${yes ? "YES" : "NO"}`, ok));
+    }
+    if(flags.childNodes.length) rows.appendChild(row("flags", flags));
+
+    // Location
+    const locKeys = [
+      "continent_code",
+      "country_name","country_code","region","region_code","city","postal",
+      "latitude","longitude",
+      "in_eu",
+      "country_tld","country_calling_code","country_capital",
+      "country_area","country_population"
+    ];
+    const loc = pick(d, locKeys);
+    for(const k of Object.keys(loc)) rows.appendChild(row(k, String(loc[k])));
+
+    // Locale / time
+    const tz = pick(d, ["timezone","utc_offset","languages","currency","currency_name"]);
+    for(const k of Object.keys(tz)) rows.appendChild(row(k, String(tz[k])));
+
+    // Network
+    const netInfo = pick(d, ["asn","org"]);
+    for(const k of Object.keys(netInfo)) rows.appendChild(row(k, String(netInfo[k])));
+
+    // RDAP enrichment
+    if(rdap){
+      const rdTitle = document.createElement("div");
+      rdTitle.style.marginTop = "6px";
+      rdTitle.style.color = "rgba(255,255,255,.72)";
+      rdTitle.style.fontSize = "11px";
+      rdTitle.style.textTransform = "uppercase";
+      rdTitle.style.letterSpacing = ".6px";
+      rdTitle.textContent = "RDAP";
+      rows.appendChild(rdTitle);
+
+      const rdPick = ["name","type","handle","startAddress","endAddress","ipVersion","country","parentHandle"];
+      const rd = pick(rdap, rdPick);
+      for(const k of Object.keys(rd)) rows.appendChild(row("rdap_"+k, String(rd[k])));
+
+      // CIDRs
+      if(Array.isArray(rdap.cidr0_cidrs) && rdap.cidr0_cidrs.length){
+        const cidrs = rdap.cidr0_cidrs
+          .map(x => {
+            const p = x?.v4prefix || x?.v6prefix;
+            const len = x?.length;
+            return (p && (len != null)) ? `${p}/${len}` : null;
+          })
+          .filter(Boolean);
+        if(cidrs.length) rows.appendChild(row("rdap_cidrs", cidrs.join(", ")));
+      }
+
+      // Abuse / NOC contacts (emails)
+      const emails = extractRdapEmails(rdap);
+      if(emails.length){
+        const list = document.createElement("div");
+        list.className = "list";
+        for(const em of emails.slice(0, 40)){
+          const line = document.createElement("div");
+          line.className = "item";
+          const code = document.createElement("div"); code.className = "code"; code.textContent = em;
+          const btn = document.createElement("button");
+          btn.className = "miniBtn"; btn.type = "button"; btn.textContent = UI[LANG].copy;
+          btn.setAttribute("data-copy", em);
+          line.appendChild(code); line.appendChild(btn);
+          list.appendChild(line);
+        }
+        rows.appendChild(row("rdap_emails", list));
+      }
+    }
+
+    // Everything (ipapi fields) in a clean table
+    const det = document.createElement("details");
+    det.className = "raw";
+    const sum = document.createElement("summary");
+    sum.textContent = (LANG === "ru") ? "Все поля" : (LANG === "uk" ? "Усі поля" : "All fields");
+    const table = document.createElement("table");
+    table.className = "kv";
+
+    const keys = Object.keys(d || {}).filter(k => !k.startsWith("_"));
+    keys.sort();
+    for(const k of keys){
+      const val = d[k];
+      if(val == null || val === "") continue;
+      const trEl = document.createElement("tr");
+      const td1 = document.createElement("td"); td1.textContent = k;
+      const td2 = document.createElement("td");
+      if(typeof val === "object"){
+        const pre = document.createElement("pre");
+        pre.style.margin = "0";
+        pre.style.whiteSpace = "pre-wrap";
+        pre.textContent = JSON.stringify(val, null, 2);
+        td2.appendChild(pre);
+      }else{
+        td2.textContent = String(val);
+      }
+      trEl.appendChild(td1); trEl.appendChild(td2);
+      table.appendChild(trEl);
+    }
+    det.appendChild(sum);
+    det.appendChild(table);
+    rows.appendChild(det);
+
+    return rows;
+  }
+
+  function renderDiscord(data){
+    const d = data?.data ? data.data : data;
+    const rows = document.createElement("div");
+    rows.className = "rows";
+    rows.appendChild(row("id", d.id || ""));
+    rows.appendChild(row("created_at", d.created_at_iso || ""));
+    return rows;
+  }
+
+  function renderResult(data){
+    outEl.innerHTML = "";
+
+    const box = document.createElement("div");
+    box.className = "resultBox";
+
+    const ok = (data && data.ok === true);
+    const top = document.createElement("div");
+    top.className = "resultTop";
+
+    const b = document.createElement("span");
+    b.className = "badge " + (ok ? "ok" : "bad");
+    b.textContent = ok ? UI[LANG].success : UI[LANG].fail;
+
+    const t = document.createElement("span");
+    t.className = "resultTool";
+    t.textContent = current ? tr(current.name) : "Result";
+
+    top.appendChild(b);
+    top.appendChild(t);
+    box.appendChild(top);
+
+    if (data && data.qr_url){
+      const img = document.createElement("img");
+      img.className = "qr";
+      img.src = data.qr_url;
+      img.alt = "QR";
+      img.loading = "lazy";
+      box.appendChild(img);
+    }
+
+    if (data && data.map){
+      const a = document.createElement("a");
+      a.href = data.map; a.target="_blank"; a.rel="noreferrer";
+      a.textContent = UI[LANG].openMap;
+      box.appendChild(a);
+      box.appendChild(document.createElement("div"));
+      box.appendChild(document.createElement("div"));
+    }
+
+    const body = document.createElement("div");
+    body.className = "resultBody";
+
+    if(!ok){
+      body.appendChild(row("message", data?.error || UI[LANG].error));
+      box.appendChild(body);
+    } else {
+      let view = null;
+      const id = current?.id || "";
+      if(id === "headers") view = renderHeaders(data);
+      else if(id === "email") view = renderEmail(data);
+      else if(id === "whois") view = renderWhois(data);
+      else if(id === "github") view = renderGithub(data);
+      else if(id === "pass") view = renderPasswords(data);
+      else if(id === "subs") view = renderSubdomains(data);
+      else if(id === "ip" || id === "geo") view = renderIP(data);
+      else if(id === "discord") view = renderDiscord(data);
+      else view = renderGenericKV(data);
+
+      body.appendChild(view);
+      box.appendChild(body);
+    }
+
+    const det = document.createElement("details");
+    det.className = "raw";
+    const sum = document.createElement("summary");
+    sum.textContent = UI[LANG].raw;
+    const pre = document.createElement("pre");
+    pre.innerHTML = escapeHtml(JSON.stringify(data, null, 2));
+    det.appendChild(sum);
+    det.appendChild(pre);
+    box.appendChild(det);
+
+    outEl.appendChild(box);
+  }
+
+  // Copy buttons (event delegation)
+  outEl.addEventListener("click", async (e)=>{
+    const btn = e.target.closest("[data-copy]");
+    if(!btn) return;
+    const txt = btn.getAttribute("data-copy") || "";
+    try{
+      await navigator.clipboard.writeText(txt);
+      const old = btn.textContent;
+      btn.textContent = UI[LANG].copied;
+      setTimeout(()=>{ btn.textContent = old; }, 900);
+    }catch{
+      // ignore
+    }
   });
 
-  async function run(){
-    const username = $("username").value.trim();
-    if (username.length < 2 || username.length > 64){
-      statusLine.textContent = "Ник должен быть 2..64 символа.";
-      return;
-    }
 
-    setBusy(true);
-    btnDownload.disabled = true;
-    modalStatus.textContent = "";
-    clearLogs();
-    log(`start scan for "${username}"`, "logOk");
-
-    last = { username, total: 0, results: [], found: [] };
-
-    // Stable settings: smaller pages and lower concurrency
-    const pageSize = 20;
-    const concurrency = 4;
-
+  btnRun.onclick = async ()=>{
+    if(!current) return;
+    const values = {};
+    fieldsEl.querySelectorAll("input").forEach(i=>values[i.dataset.key]=i.value);
+    showRunning();
     try{
-      const first = await api(`/api/check?username=${encodeURIComponent(username)}&offset=0&page_size=${pageSize}&concurrency=${concurrency}`, 2);
-      last.total = first.total;
-      last.results.push(...first.results);
-      log(`batch 1: ${first.results.length} / total ${last.total}`, "logMuted");
-
-      let done = last.results.length;
-      statusLine.textContent = `Проверено ${done}/${last.total}…`;
-
-      for (let offset = pageSize; offset < last.total; offset += pageSize){
-        const data = await api(`/api/check?username=${encodeURIComponent(username)}&offset=${offset}&page_size=${pageSize}&concurrency=${concurrency}`, 2);
-        last.results.push(...data.results);
-        done = last.results.length;
-        log(`batch ${(offset/pageSize)+1}: +${data.results.length} => ${done}/${last.total}`, "logMuted");
-        statusLine.textContent = `Проверено ${done}/${last.total}…`;
-        await new Promise(r => setTimeout(r, 320));
-      }
-
-      const counts = { maybe:0, no:0, unknown:0, error:0 };
-      for (const r of last.results){ counts[r.verdict] = (counts[r.verdict] || 0) + 1; }
-      log(`summary: maybe=${counts.maybe||0} no=${counts.no||0} unknown=${counts.unknown||0} error=${counts.error||0}`, "logOk");
-
-      last.found = buildFound(last.results);
-      log(`found links: ${last.found.length}`, "logOk");
-
-      statusLine.textContent = `Готово. Найдено: ${last.found.length}.`;
-
-      modalTitle.textContent = `Найдено: ${last.found.length}`;
-      renderFound();
-      btnDownload.disabled = false;
-      openModal();
+      const data = await current.run(values);
+      renderResult(data);
     }catch(e){
-      log("network error / function timeout / blocked by site.", "logErr");
-      statusLine.textContent = "Сбой сети. Это обычно таймаут функции или блокировки сайтов. Уменьши page_size/concurrency ещё сильнее (в коде), если повторяется.";
-    }finally{
-      setBusy(false);
+      renderError(e);
     }
+  };
+
+  
+  function startApp(lang){
+    applyLang(lang);
+    gate.classList.add("hidden");
+    wrap.classList.remove("hidden");
+    renderCards();
   }
 
-  btnSearch.addEventListener("click", run);
-  $("username").addEventListener("keydown", (e) => { if (e.key === "Enter") run(); });
+  function chooseLang(lang){
+    // show loader screen for at least one paint so the user sees animation
+    applyLang(lang);
+    gatePick.classList.add("hidden");
+    gateLoad.classList.remove("hidden");
+    // two frames + short delay to make the animation visible even on fast devices
+    requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>startApp(lang), 5000)));
+  }
 
-  window.addEventListener("load", () => {
-    clearLogs();
-    statusLine.textContent = "Готов.";
-    setTimeout(() => {
-      const intro = document.getElementById("intro");
-      if (intro) intro.style.display = "none";
-    }, 5100);
+  window.addEventListener("load", ()=>{
+    // reset gate state
+    gate.classList.remove("hidden");
+    gatePick.classList.remove("hidden");
+    gateLoad.classList.add("hidden");
+
+    document.querySelectorAll(".langBtn").forEach(btn=>{
+      btn.addEventListener("click", ()=> chooseLang(btn.dataset.lang));
+    });
+
+    // initial texts (avoid flicker)
+    applyLang("ru");
   });
 </script>
 </body>
