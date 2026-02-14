@@ -90,6 +90,7 @@
     }
     .btn:disabled{opacity:.5;cursor:not-allowed}
     .btn.secondary{background:#000;color:#fff;border:1px solid rgba(255,255,255,.35)}
+    .btn:disabled{opacity:.6; cursor:not-allowed;}
     .fieldRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
     .input{
       flex:1 1 280px;
@@ -162,15 +163,15 @@
       <div class="gateTitle" id="gateTitle">Выбери язык</div>
       <div class="langRow">
         <button class="langBtn" data-lang="uk" type="button">
-          <img src="public/flag_ua.gif" alt="ua">
+          <img data-asset="flag_ua.gif" alt="ua">
           <div class="l">Українська</div>
         </button>
         <button class="langBtn" data-lang="ru" type="button">
-          <img src="public/flag_ru.gif" alt="ru">
+          <img data-asset="flag_ru.gif" alt="ru">
           <div class="l">Русский</div>
         </button>
         <button class="langBtn" data-lang="en" type="button">
-          <img src="public/flag_en.gif" alt="en">
+          <img data-asset="flag_en.gif" alt="en">
           <div class="l">English</div>
         </button>
       </div>
@@ -179,7 +180,7 @@
 
     <div class="gateInner hidden" id="gateLoad">
       <div class="gateLoadBox">
-        <img src="public/loading.gif" alt="loading">
+        <img data-asset="loading.gif" alt="loading">
         <div class="t" id="gateLoadTitle">Loading...</div>
         <div class="gateHint" id="gateLoadHint"></div>
       </div>
@@ -230,6 +231,27 @@
 
   let current = null;
   let LANG = "ru";
+
+  // Asset paths:
+  // Different hosts treat the `public/` folder differently.
+  // We try multiple candidates so GIFs work both:
+  //  - on Vercel frameworks (public/* -> /*)
+  //  - on plain static hosting (public/* -> /public/*)
+  //  - when opened as file:// (./public/*)
+  function assetCandidates(name){
+    if(location.protocol === "file:") return [`public/${name}`];
+    return [`/${name}`, `/public/${name}`, `public/${name}`];
+  }
+  function setAssetImg(img, name){
+    const cand = assetCandidates(name);
+    let i = 0;
+    const next = ()=>{
+      i++;
+      if(i < cand.length) img.src = cand[i];
+    };
+    img.onerror = next;
+    img.src = cand[0];
+  }
 
   const UI = {
     ru: {
@@ -288,7 +310,7 @@
       name:{ru:"IP Lookup", uk:"IP Lookup", en:"IP Lookup"},
       action:{ru:"Проверить IP", uk:"Перевірити IP", en:"Check IP"},
       fields:[{k:"ip", ph:{ru:"IP (пусто = мой IP)", uk:"IP (порожньо = мій IP)", en:"IP (empty = my IP)"}}],
-      run: async (v)=> apiJson(`/api/ip?ip=${encodeURIComponent(v.ip||"")}`)
+      run: async (v)=> apiJson(`/api/ip?ip=${encodeURIComponent(v.ip||"")}&lang=${encodeURIComponent(LANG)}`)
     },
     {
       id:"geo",
@@ -296,7 +318,7 @@
       action:{ru:"Показать карту", uk:"Показати мапу", en:"Show map"},
       fields:[{k:"ip", ph:{ru:"IP (пусто = мой IP)", uk:"IP (порожньо = мій IP)", en:"IP (empty = my IP)"}}],
       run: async (v)=> {
-        const r = await apiJson(`/api/ip?ip=${encodeURIComponent(v.ip||"")}`);
+        const r = await apiJson(`/api/ip?ip=${encodeURIComponent(v.ip||"")}&lang=${encodeURIComponent(LANG)}`);
         const d = r.data || {};
         const lat = d.latitude, lon = d.longitude;
         if (lat && lon) r.map = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=12/${lat}/${lon}`;
@@ -462,10 +484,26 @@
   };
 
   async function apiJson(url){
-    const r = await fetch(url, { cache:"no-store" });
-    const data = await r.json().catch(()=> ({}));
-    if(!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
-    return data;
+    const ctrl = new AbortController();
+    const timer = setTimeout(()=>ctrl.abort(), 15000);
+    try{
+      const r = await fetch(url, { cache:"no-store", signal: ctrl.signal });
+      const ctype = (r.headers.get("content-type") || "").toLowerCase();
+      let data = {};
+      if(ctype.includes("application/json")){
+        data = await r.json().catch(()=> ({}));
+      }else{
+        const txt = await r.text().catch(()=> "");
+        data = { error: txt ? txt.slice(0, 200) : "" };
+      }
+      if(!r.ok) throw new Error(data.error || data.message || `HTTP ${r.status}`);
+      return data;
+    }catch(e){
+      if(e && e.name === "AbortError") throw new Error("Timeout");
+      throw e;
+    }finally{
+      clearTimeout(timer);
+    }
   }
 
   
@@ -505,7 +543,9 @@
   }
 
   function showRunning(){
-    outEl.innerHTML = `<div class="loadingRow"><img class="loadingGif" src="public/loading.gif" alt=""><div>${escapeHtml(UI[LANG].running)}</div></div>`;
+    outEl.innerHTML = `<div class="loadingRow"><img class="loadingGif" alt="" data-asset="loading.gif"><div>${escapeHtml(UI[LANG].running)}</div></div>`;
+    const img = outEl.querySelector("img.loadingGif");
+    if(img) setAssetImg(img, "loading.gif");
   }
 
   function renderError(err){
@@ -807,25 +847,90 @@
     }
     if(flags.childNodes.length) rows.appendChild(row("flags", flags));
 
-    // Location
-    const locKeys = [
-      "continent_code",
-      "country_name","country_code","region","region_code","city","postal",
-      "latitude","longitude",
-      "in_eu",
-      "country_tld","country_calling_code","country_capital",
-      "country_area","country_population"
-    ];
-    const loc = pick(d, locKeys);
-    for(const k of Object.keys(loc)) rows.appendChild(row(k, String(loc[k])));
+    // Location / locale (supports both ipapi.co and ipwho.is)
+    const countryName = d.country_name || d.country || "";
+    const inEU = (d.in_eu != null) ? d.in_eu : (d.is_eu != null ? d.is_eu : "");
+    const calling = d.country_calling_code || d.calling_code || "";
+    const capital = d.country_capital || d.capital || "";
+    const tld = d.country_tld || "";
 
-    // Locale / time
-    const tz = pick(d, ["timezone","utc_offset","languages","currency","currency_name"]);
-    for(const k of Object.keys(tz)) rows.appendChild(row(k, String(tz[k])));
+    const lat = d.latitude;
+    const lon = d.longitude;
+
+    if(d.continent) rows.appendChild(row("continent", d.continent));
+    if(d.continent_code) rows.appendChild(row("continent_code", d.continent_code));
+    if(countryName) rows.appendChild(row("country", countryName));
+    if(d.country_code) rows.appendChild(row("country_code", d.country_code));
+    if(d.region) rows.appendChild(row("region", d.region));
+    if(d.region_code) rows.appendChild(row("region_code", d.region_code));
+    if(d.city) rows.appendChild(row("city", d.city));
+    if(d.postal) rows.appendChild(row("postal", d.postal));
+    if(inEU !== "") rows.appendChild(row("in_eu", String(inEU)));
+    if(calling) rows.appendChild(row("calling_code", calling));
+    if(capital) rows.appendChild(row("capital", capital));
+    if(tld) rows.appendChild(row("tld", tld));
+    if(d.borders) rows.appendChild(row("borders", d.borders));
+    if(lat != null) rows.appendChild(row("latitude", String(lat)));
+    if(lon != null) rows.appendChild(row("longitude", String(lon)));
+
+    // Flag (emoji + image if present)
+    if(d.flag && typeof d.flag === "object"){
+      const parts = [];
+      if(d.flag.emoji) parts.push(d.flag.emoji);
+      if(d.flag.img) parts.push(d.flag.img);
+      if(parts.length) rows.appendChild(row("flag", parts.join("  ")));
+    }
+
+    // Timezone
+    if(d.timezone){
+      if(typeof d.timezone === "string"){
+        rows.appendChild(row("timezone", d.timezone));
+      }else if(typeof d.timezone === "object"){
+        if(d.timezone.id) rows.appendChild(row("timezone_id", d.timezone.id));
+        if(d.timezone.utc) rows.appendChild(row("timezone_utc", d.timezone.utc));
+        if(d.timezone.abbr) rows.appendChild(row("timezone_abbr", d.timezone.abbr));
+        if(d.timezone.current_time) rows.appendChild(row("timezone_current_time", d.timezone.current_time));
+        if(d.timezone.is_dst != null) rows.appendChild(row("timezone_is_dst", String(d.timezone.is_dst)));
+        if(d.timezone.offset != null) rows.appendChild(row("timezone_offset_sec", String(d.timezone.offset)));
+      }
+    }
+    if(d.utc_offset) rows.appendChild(row("utc_offset", String(d.utc_offset)));
+    if(d.languages) rows.appendChild(row("languages", String(d.languages)));
+
+    // Currency
+    if(d.currency){
+      if(typeof d.currency === "string"){
+        rows.appendChild(row("currency", d.currency));
+      }else if(typeof d.currency === "object"){
+        if(d.currency.code) rows.appendChild(row("currency_code", d.currency.code));
+        if(d.currency.name) rows.appendChild(row("currency_name", d.currency.name));
+        if(d.currency.symbol) rows.appendChild(row("currency_symbol", d.currency.symbol));
+        if(d.currency.plural) rows.appendChild(row("currency_plural", d.currency.plural));
+        if(d.currency.exchange_rate != null) rows.appendChild(row("currency_exchange_rate", String(d.currency.exchange_rate)));
+      }
+    }
+    if(d.currency_name && typeof d.currency !== "object") rows.appendChild(row("currency_name", d.currency_name));
 
     // Network
-    const netInfo = pick(d, ["asn","org"]);
-    for(const k of Object.keys(netInfo)) rows.appendChild(row(k, String(netInfo[k])));
+    const conn = (d.connection && typeof d.connection === "object") ? d.connection : null;
+    const asn = d.asn || conn?.asn || "";
+    const org = d.org || conn?.org || "";
+    if(asn) rows.appendChild(row("asn", String(asn)));
+    if(org) rows.appendChild(row("org", String(org)));
+    if(conn){
+      if(conn.isp) rows.appendChild(row("isp", conn.isp));
+      if(conn.domain) rows.appendChild(row("domain", conn.domain));
+    }
+
+    // Security flags (if present)
+    if(d.security && typeof d.security === "object"){
+      const sec = d.security;
+      const secBits = [];
+      for(const k of ["anonymous","proxy","vpn","tor","hosting"]){
+        if(sec[k] != null) secBits.push(`${k}:${sec[k] ? "yes" : "no"}`);
+      }
+      if(secBits.length) rows.appendChild(row("security", secBits.join("  ")));
+    }
 
     // RDAP enrichment
     if(rdap){
@@ -1014,11 +1119,14 @@
     const values = {};
     fieldsEl.querySelectorAll("input").forEach(i=>values[i.dataset.key]=i.value);
     showRunning();
+    btnRun.disabled = true;
     try{
       const data = await current.run(values);
       renderResult(data);
     }catch(e){
       renderError(e);
+    }finally{
+      btnRun.disabled = false;
     }
   };
 
@@ -1040,6 +1148,12 @@
   }
 
   window.addEventListener("load", ()=>{
+    // Fill all images that use data-asset so paths work both on Vercel and in file:// viewers.
+    document.querySelectorAll("img[data-asset]").forEach(img=>{
+      const name = img.getAttribute("data-asset");
+      if(name) setAssetImg(img, name);
+    });
+
     // reset gate state
     gate.classList.remove("hidden");
     gatePick.classList.remove("hidden");
