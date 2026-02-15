@@ -395,7 +395,7 @@
       fields:[
         {k:"q", ph:{ru:"запрос (например: nickname)", uk:"запит (наприклад: nickname)", en:"query (e.g. nickname)"}}
       ],
-      run: async (v)=> apiJson(`/api/github?q=${encodeURIComponent(v.q||"")}&type=${encodeURIComponent(v.type||"users")}`)
+      run: async (v)=> apiJson(`/api/github?q=${encodeURIComponent(v.q||"")}`)
     },
     {
       id:"subs",
@@ -1117,6 +1117,77 @@
     return rows;
   }
 
+  // ===== РЕНДЕРЕР ДЛЯ ГЕНЕРАТОРА ФЕЙКОВЫХ ЛИЧНОСТЕЙ =====
+  function renderFakeid(data){
+    const d = data?.data ? data.data : data;
+    const rows = document.createElement("div");
+    rows.className = "rows";
+
+    if(!Array.isArray(d)){
+      rows.appendChild(row("error", "Invalid data format"));
+      return rows;
+    }
+
+    for(let i = 0; i < d.length; i++){
+      const identity = d[i];
+      const box = document.createElement("div");
+      box.style.border = "1px solid rgba(255,255,255,.2)";
+      box.style.padding = "10px";
+      box.style.marginBottom = "10px";
+      box.style.background = "rgba(0,0,0,.3)";
+
+      const title = document.createElement("div");
+      title.style.fontSize = "13px";
+      title.style.fontWeight = "bold";
+      title.style.marginBottom = "8px";
+      title.style.textTransform = "uppercase";
+      title.style.letterSpacing = "0.5px";
+      title.textContent = `👤 Личность #${i+1}`;
+      box.appendChild(title);
+
+      const addRow = (label, val) => {
+        if(val == null || val === "") return;
+        const r = document.createElement("div");
+        r.style.display = "flex";
+        r.style.gap = "10px";
+        r.style.padding = "4px 0";
+        r.style.borderBottom = "1px solid rgba(255,255,255,.1)";
+        const k = document.createElement("div");
+        k.style.minWidth = "120px";
+        k.style.color = "rgba(255,255,255,.55)";
+        k.style.fontSize = "11px";
+        k.style.textTransform = "uppercase";
+        k.textContent = label;
+        const v = document.createElement("div");
+        v.style.fontSize = "12px";
+        v.style.color = "#fff";
+        v.textContent = val;
+        r.appendChild(k); r.appendChild(v);
+        box.appendChild(r);
+      };
+
+      addRow("Full Name", identity.fullName);
+      addRow("Gender", identity.gender);
+      addRow("Birth Date", identity.birthDate);
+      if(identity.address){
+        const addr = `${identity.address.city}, ${identity.address.street}, ${identity.address.zip}`;
+        addRow("Address", addr);
+      }
+      addRow("Phone", identity.phone);
+      addRow("Email", identity.email);
+      if(identity.creditCard){
+        addRow("Card", `${identity.creditCard.type} ${identity.creditCard.number}`);
+        addRow("Card CVV", identity.creditCard.cvv);
+        addRow("Card Expiry", identity.creditCard.expiry);
+      }
+      addRow("Password", identity.password);
+      addRow("Country", identity.country);
+
+      rows.appendChild(box);
+    }
+    return rows;
+  }
+
   function renderResult(data){
     outEl.innerHTML = "";
 
@@ -1174,6 +1245,7 @@
       else if(id === "subs") view = renderSubdomains(data);
       else if(id === "ip" || id === "geo") view = renderIP(data);
       else if(id === "discord") view = renderDiscord(data);
+      else if(id === "fakeid") view = renderFakeid(data);  // ВАЖНО: добавить эту строку
       else view = renderGenericKV(data);
 
       body.appendChild(view);
