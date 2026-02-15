@@ -153,7 +153,12 @@
     table.kv td{border-bottom:1px solid rgba(255,255,255,.12); padding:6px 0; vertical-align:top;}
     table.kv td:first-child{color:rgba(255,255,255,.55); font-size:11px; text-transform:uppercase; letter-spacing:.6px; width:180px; padding-right:12px;}
 
-  </style>
+  
+    .seg{display:flex; width:max-content; border:1px solid rgba(255,255,255,.35); overflow:hidden; margin-top:10px}
+    .segBtn{background:#000; color:#fff; border:0; border-right:1px solid rgba(255,255,255,.35); padding:10px 12px; font-family:var(--mono); font-size:12px; cursor:pointer}
+    .segBtn:last-child{border-right:0}
+    .segBtn.active{background:#fff; color:#000}
+</style>
 </head>
 <body>
   <div class="bgNoise"></div>
@@ -339,17 +344,7 @@
       fields:[{k:"url", ph:{ru:"https://example.com", uk:"https://example.com", en:"https://example.com"}}],
       run: async (v)=> apiJson(`/api/headers?url=${encodeURIComponent(v.url||"")}`)
     },
-    {
-      id:"email",
-      name:{ru:"Email Validator", uk:"Email Validator", en:"Email Validator"},
-      action:{ru:"Проверить email", uk:"Перевірити email", en:"Validate email"},
-      fields:[{k:"email", ph:{ru:"name@example.com", uk:"name@example.com", en:"name@example.com"}}],
-      run: async (v)=> {
-        const e = (v.email||"").trim();
-        return apiJson(`/api/email?email=${encodeURIComponent(e)}`);
-      }
-    },
-    {
+{
       id:"qr",
       name:{ru:"QR Code Generator", uk:"QR Code Generator", en:"QR Code Generator"},
       action:{ru:"Сгенерировать QR", uk:"Згенерувати QR", en:"Generate QR"},
@@ -403,8 +398,7 @@
       name:{ru:"GitHub Search", uk:"GitHub Search", en:"GitHub Search"},
       action:{ru:"Искать", uk:"Шукати", en:"Search"},
       fields:[
-        {k:"q", ph:{ru:"запрос (например: nickname)", uk:"запит (наприклад: nickname)", en:"query (e.g. nickname)"}},
-        {k:"type", ph:{ru:"users или repositories", uk:"users або repositories", en:"users or repositories"}}
+        {k:"q", ph:{ru:"запрос (например: nickname)", uk:"запит (наприклад: nickname)", en:"query (e.g. nickname)"}}
       ],
       run: async (v)=> apiJson(`/api/github?q=${encodeURIComponent(v.q||"")}&type=${encodeURIComponent(v.type||"users")}`)
     },
@@ -473,6 +467,43 @@
       inp.placeholder = tr(f.ph) || f.k;
       inp.dataset.key = f.k;
       fieldsEl.appendChild(inp);
+
+    // GitHub Search: type picker (users / repositories) as buttons
+    if(current.id === "github"){
+      const hid = document.createElement("input");
+      hid.type = "hidden";
+      hid.dataset.key = "type";
+      hid.value = "users";
+      fieldsEl.appendChild(hid);
+
+      const seg = document.createElement("div");
+      seg.className = "seg";
+
+      const bUsers = document.createElement("button");
+      bUsers.type = "button";
+      bUsers.className = "segBtn active";
+      bUsers.textContent = tr({ru:"Пользователи", uk:"Користувачі", en:"Users"});
+
+      const bRepos = document.createElement("button");
+      bRepos.type = "button";
+      bRepos.className = "segBtn";
+      bRepos.textContent = tr({ru:"Репозитории", uk:"Репозиторії", en:"Repositories"});
+
+      const setType = (t)=>{
+        hid.value = t;
+        if(t === "users"){
+          bUsers.classList.add("active"); bRepos.classList.remove("active");
+        }else{
+          bRepos.classList.add("active"); bUsers.classList.remove("active");
+        }
+      };
+      bUsers.onclick = ()=>setType("users");
+      bRepos.onclick = ()=>setType("repositories");
+
+      seg.appendChild(bUsers);
+      seg.appendChild(bRepos);
+      fieldsEl.appendChild(seg);
+    }
     }
     panel.classList.add("open");
     window.scrollTo({ top: panel.offsetTop - 8, behavior: "smooth" });
