@@ -395,7 +395,7 @@
       fields:[
         {k:"q", ph:{ru:"запрос (например: nickname)", uk:"запит (наприклад: nickname)", en:"query (e.g. nickname)"}}
       ],
-      run: async (v)=> apiJson(`/api/github?q=${encodeURIComponent(v.q||"")}`)
+      run: async (v)=> apiJson(`/api/github?q=${encodeURIComponent(v.q||"")}&type=${encodeURIComponent(v.type||"users")}`)
     },
     {
       id:"subs",
