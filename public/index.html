@@ -519,14 +519,75 @@
     btnRun.textContent = tr(current.action) || "Run";
     fieldsEl.innerHTML = "";
     outEl.textContent = "";
-    for(const f of (current.fields || [])){
-      const inp = document.createElement("input");
-      inp.className = "input";
-      inp.placeholder = tr(f.ph) || f.k;
-      inp.dataset.key = f.k;
-      fieldsEl.appendChild(inp);
 
-    // GitHub Search: type picker (users / repositories) as buttons
+    for(const f of (current.fields || [])){
+      // Определяем, нужно ли создавать кнопки вместо текстового поля
+      const makeSegments = (() => {
+        if (current.id === 'deobfuscate' && (f.k === 'mode' || f.k === 'lang')) return true;
+        if (current.id === 'fakeid' && f.k === 'country') return true;
+        if (current.id === 'metasploit' && (f.k === 'platform' || f.k === 'payload_type')) return true;
+        return false;
+      })();
+
+      if (makeSegments) {
+        // Создаём контейнер для кнопок
+        const segContainer = document.createElement('div');
+        segContainer.className = 'fieldRow';
+        
+        const hidden = document.createElement('input');
+        hidden.type = 'hidden';
+        hidden.dataset.key = f.k;
+        
+        // Определяем варианты в зависимости от поля
+        let options = [];
+        if (current.id === 'deobfuscate' && f.k === 'mode') {
+          options = ['deobfuscate', 'obfuscate'];
+        } else if (current.id === 'deobfuscate' && f.k === 'lang') {
+          options = ['js', 'php', 'html'];
+        } else if (current.id === 'fakeid' && f.k === 'country') {
+          options = ['ru', 'us'];
+        } else if (current.id === 'metasploit' && f.k === 'platform') {
+          options = ['windows', 'linux', 'android'];
+        } else if (current.id === 'metasploit' && f.k === 'payload_type') {
+          options = ['reverse', 'shell', 'bind'];
+        }
+        
+        // Устанавливаем значение по умолчанию (первый вариант)
+        hidden.value = options[0];
+        
+        const seg = document.createElement('div');
+        seg.className = 'seg';
+        
+        const buttons = [];
+        options.forEach((opt, idx) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'segBtn' + (idx === 0 ? ' active' : '');
+          btn.textContent = opt;
+          btn.onclick = () => {
+            hidden.value = opt;
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+          };
+          seg.appendChild(btn);
+          buttons.push(btn);
+        });
+        
+        segContainer.appendChild(hidden);
+        segContainer.appendChild(seg);
+        fieldsEl.appendChild(segContainer);
+        
+      } else {
+        // Обычное текстовое поле
+        const inp = document.createElement('input');
+        inp.className = 'input';
+        inp.placeholder = tr(f.ph) || f.k;
+        inp.dataset.key = f.k;
+        fieldsEl.appendChild(inp);
+      }
+    }
+
+    // Специальная обработка для GitHub (уже есть)
     if(current.id === "github"){
       const hid = document.createElement("input");
       hid.type = "hidden";
@@ -562,7 +623,7 @@
       seg.appendChild(bRepos);
       fieldsEl.appendChild(seg);
     }
-    }
+
     panel.classList.add("open");
     window.scrollTo({ top: panel.offsetTop - 8, behavior: "smooth" });
   }
@@ -1245,7 +1306,7 @@
       else if(id === "subs") view = renderSubdomains(data);
       else if(id === "ip" || id === "geo") view = renderIP(data);
       else if(id === "discord") view = renderDiscord(data);
-      else if(id === "fakeid") view = renderFakeid(data);  // ВАЖНО: добавить эту строку
+      else if(id === "fakeid") view = renderFakeid(data);
       else view = renderGenericKV(data);
 
       body.appendChild(view);
