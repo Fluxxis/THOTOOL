@@ -238,11 +238,6 @@
   let LANG = "ru";
 
   // Asset paths:
-  // Different hosts treat the `public/` folder differently.
-  // We try multiple candidates so GIFs work both:
-  //  - on Vercel frameworks (public/* -> /*)
-  //  - on plain static hosting (public/* -> /public/*)
-  //  - when opened as file:// (./public/*)
   function assetCandidates(name){
     if(location.protocol === "file:") return [`public/${name}`];
     return [`/${name}`, `/public/${name}`, `public/${name}`];
@@ -344,7 +339,7 @@
       fields:[{k:"url", ph:{ru:"https://example.com", uk:"https://example.com", en:"https://example.com"}}],
       run: async (v)=> apiJson(`/api/headers?url=${encodeURIComponent(v.url||"")}`)
     },
-{
+    {
       id:"qr",
       name:{ru:"QR Code Generator", uk:"QR Code Generator", en:"QR Code Generator"},
       action:{ru:"Сгенерировать QR", uk:"Згенерувати QR", en:"Generate QR"},
@@ -400,7 +395,7 @@
       fields:[
         {k:"q", ph:{ru:"запрос (например: nickname)", uk:"запит (наприклад: nickname)", en:"query (e.g. nickname)"}}
       ],
-      run: async (v)=> apiJson(`/api/github?q=${encodeURIComponent(v.q||"")}&type=${encodeURIComponent(v.type||"users")}`)
+      run: async (v)=> apiJson(`/api/github?q=${encodeURIComponent(v.q||"")}`)
     },
     {
       id:"subs",
@@ -412,16 +407,79 @@
     {
       id:"port",
       name:{ru:"Port Scanner", uk:"Port Scanner", en:"Port Scanner"},
-      action:{ru:"Недоступно", uk:"Недоступно", en:"Unavailable"},
+      action:{ru:"Сканировать", uk:"Сканувати", en:"Scan"},
       fields:[{k:"host", ph:{ru:"host", uk:"host", en:"host"}}],
-      run: async (_)=> ({ ok:false, error:"Not implemented" })
+      run: async (v)=> apiJson(`/api/port?host=${encodeURIComponent(v.host||"")}`)
     },
     {
       id:"proxy",
       name:{ru:"Proxy Checker", uk:"Proxy Checker", en:"Proxy Checker"},
-      action:{ru:"Недоступно", uk:"Недоступно", en:"Unavailable"},
+      action:{ru:"Проверить", uk:"Перевірити", en:"Check"},
       fields:[{k:"proxy", ph:{ru:"ip:port", uk:"ip:port", en:"ip:port"}}],
-      run: async (_)=> ({ ok:false, error:"Not implemented" })
+      run: async (v)=> apiJson(`/api/proxy?proxy=${encodeURIComponent(v.proxy||"")}`)
+    },
+    // ========== НОВЫЕ ФУНКЦИИ ==========
+    {
+      id:"dirbuster",
+      name:{ru:"Брутфорс директорий/файлов", uk:"Брутфорс директорій/файлів", en:"Directory/File Brute Forcer"},
+      action:{ru:"Начать сканирование", uk:"Розпочати сканування", en:"Start scanning"},
+      fields:[
+        {k:"url", ph:{ru:"https://example.com", uk:"https://example.com", en:"https://example.com"}},
+        {k:"extensions", ph:{ru:"расширения (php,html,asp) через запятую", uk:"розширення (php,html,asp) через кому", en:"extensions (php,html,asp) comma separated"}}
+      ],
+      run: async (v)=> {
+        const url = v.url?.trim();
+        if(!url) throw new Error(tr({ru:"Введите URL", uk:"Введіть URL", en:"Enter URL"}));
+        const exts = v.extensions?.split(',').map(e=>e.trim()).filter(Boolean) || ['php','html','htm','asp','aspx','jsp','do','txt','bak','zip','tar.gz','sql'];
+        return apiJson(`/api/dirbuster?url=${encodeURIComponent(url)}&exts=${encodeURIComponent(exts.join(','))}`);
+      }
+    },
+    {
+      id:"fakeid",
+      name:{ru:"Генератор фейковых личностей", uk:"Генератор фейкових осіб", en:"Fake Identity Generator"},
+      action:{ru:"Сгенерировать", uk:"Згенерувати", en:"Generate"},
+      fields:[
+        {k:"country", ph:{ru:"Страна (ru/us)", uk:"Країна (ru/us)", en:"Country (ru/us)"}},
+        {k:"count", ph:{ru:"Количество (1-10)", uk:"Кількість (1-10)", en:"Count (1-10)"}}
+      ],
+      run: async (v)=> {
+        const country = (v.country || 'ru').toLowerCase();
+        if(!['ru','us'].includes(country)) throw new Error(tr({ru:"Страна должна быть ru или us", uk:"Країна має бути ru або us", en:"Country must be ru or us"}));
+        const cnt = Math.min(parseInt(v.count) || 1, 10);
+        return apiJson(`/api/fakeid?country=${country}&count=${cnt}`);
+      }
+    },
+    {
+      id:"deobfuscate",
+      name:{ru:"Деобфускатор кода", uk:"Деобфускатор коду", en:"Code Deobfuscator"},
+      action:{ru:"Деобфусцировать", uk:"Деобфускувати", en:"Deobfuscate"},
+      fields:[
+        {k:"code", ph:{ru:"код для обработки", uk:"код для обробки", en:"code to process"}},
+        {k:"mode", ph:{ru:"режим (deobfuscate/obfuscate)", uk:"режим (deobfuscate/obfuscate)", en:"mode (deobfuscate/obfuscate)"}},
+        {k:"lang", ph:{ru:"язык (js/php/html)", uk:"мова (js/php/html)", en:"language (js/php/html)"}}
+      ],
+      run: async (v)=> {
+        if(!v.code?.trim()) throw new Error(tr({ru:"Введите код", uk:"Введіть код", en:"Enter code"}));
+        const mode = v.mode || 'deobfuscate';
+        const lang = v.lang || 'js';
+        return apiJson(`/api/deobfuscate?mode=${mode}&lang=${lang}`, { code: v.code }, 'POST');
+      }
+    },
+    {
+      id:"metasploit",
+      name:{ru:"Генератор нагрузки Metasploit", uk:"Генератор навантаження Metasploit", en:"Metasploit Payload Generator"},
+      action:{ru:"Сгенерировать", uk:"Згенерувати", en:"Generate"},
+      fields:[
+        {k:"lhost", ph:{ru:"ваш IP (LHOST)", uk:"ваш IP (LHOST)", en:"your IP (LHOST)"}},
+        {k:"lport", ph:{ru:"порт (LPORT)", uk:"порт (LPORT)", en:"port (LPORT)"}},
+        {k:"platform", ph:{ru:"платформа (windows/linux/android)", uk:"платформа (windows/linux/android)", en:"platform (windows/linux/android)"}},
+        {k:"payload_type", ph:{ru:"тип (reverse/shell/bind)", uk:"тип (reverse/shell/bind)", en:"type (reverse/shell/bind)"}}
+      ],
+      run: async (v)=> {
+        if(!v.lhost?.trim()) throw new Error(tr({ru:"Введите ваш IP", uk:"Введіть ваш IP", en:"Enter your IP"}));
+        if(!v.lport?.trim() || isNaN(parseInt(v.lport))) throw new Error(tr({ru:"Введите корректный порт", uk:"Введіть коректний порт", en:"Enter valid port"}));
+        return apiJson(`/api/metasploit?lhost=${encodeURIComponent(v.lhost)}&lport=${encodeURIComponent(v.lport)}&platform=${encodeURIComponent(v.platform||'windows')}&type=${encodeURIComponent(v.payload_type||'reverse')}`);
+      }
     }
   ];
 
@@ -514,11 +572,21 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  async function apiJson(url){
+  // Обновленная функция apiJson с поддержкой POST
+  async function apiJson(url, body, method = 'GET'){
     const ctrl = new AbortController();
     const timer = setTimeout(()=>ctrl.abort(), 15000);
     try{
-      const r = await fetch(url, { cache:"no-store", signal: ctrl.signal });
+      const options = {
+        method,
+        signal: ctrl.signal,
+        headers: {}
+      };
+      if (body) {
+        options.body = JSON.stringify(body);
+        options.headers['Content-Type'] = 'application/json';
+      }
+      const r = await fetch(url, options);
       const ctype = (r.headers.get("content-type") || "").toLowerCase();
       let data = {};
       if(ctype.includes("application/json")){
@@ -878,7 +946,7 @@
     const rdap = (d && typeof d._rdap === "object" && d._rdap) ? d._rdap : null;
     const ip = d?.ip || meta?.ip || "";
 
-    // --- Pretty top block (what most people actually need) ---
+    // --- Pretty top block ---
     rows.appendChild(row("IP Address", ip));
 
     const cc = d?.country_code ? String(d.country_code) : (d?.countryCode ? String(d.countryCode) : "");
@@ -926,13 +994,13 @@
       rows.appendChild(row("Map", a));
     }
 
-    // Tech bits (still useful)
+    // Tech bits
     const rev = d?._ptr || d?.reverse || "";
     if(rev) rows.appendChild(row("Reverse DNS", rev));
     if(meta.ip_version) rows.appendChild(row("IP Version", String(meta.ip_version)));
     if(meta.fetched_at_iso) rows.appendChild(row("Fetched At", meta.fetched_at_iso));
 
-    // Flags (showing "good" when FALSE for risky flags)
+    // Flags
     const flags = document.createElement("div");
     const flagItems = [
       { label:"PRIVATE", value: meta.is_private, goodWhenFalse:true },
@@ -950,7 +1018,7 @@
     }
     if(flags.childNodes.length) rows.appendChild(row("flags", flags));
 
-    // Extra: show security-ish hints if present
+    // Extra hints
     if(d.mobile != null || d.proxy != null || d.hosting != null){
       const sec = document.createElement("div");
       if(d.mobile != null) sec.appendChild(pill(`MOBILE ${d.mobile ? "YES" : "NO"}`, true));
@@ -959,7 +1027,6 @@
       if(sec.childNodes.length) rows.appendChild(row("Hints", sec));
     }
 
-    // Network (if any extra fields exist)
     if(d.as_text) rows.appendChild(row("AS", d.as_text));
     if(d.reverse && !rev) rows.appendChild(row("Reverse", d.reverse));
 
@@ -978,7 +1045,6 @@
       const rd = pick(rdap, rdPick);
       for(const k of Object.keys(rd)) rows.appendChild(row("rdap_"+k, String(rd[k])));
 
-      // CIDRs
       if(Array.isArray(rdap.cidr0_cidrs) && rdap.cidr0_cidrs.length){
         const cidrs = rdap.cidr0_cidrs
           .map(x => {
@@ -990,7 +1056,6 @@
         if(cidrs.length) rows.appendChild(row("rdap_cidrs", cidrs.join(", ")));
       }
 
-      // Abuse / NOC contacts (emails)
       const emails = extractRdapEmails(rdap);
       if(emails.length){
         const list = document.createElement("div");
@@ -1009,7 +1074,6 @@
       }
     }
 
-    // Everything (ipapi fields) in a clean table
     const det = document.createElement("details");
     det.className = "raw";
     const sum = document.createElement("summary");
@@ -1170,22 +1234,18 @@
   }
 
   function chooseLang(lang){
-    // show loader screen for at least one paint so the user sees animation
     applyLang(lang);
     gatePick.classList.add("hidden");
     gateLoad.classList.remove("hidden");
-    // two frames + short delay to make the animation visible even on fast devices
     requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>startApp(lang), 5000)));
   }
 
   window.addEventListener("load", ()=>{
-    // Fill all images that use data-asset so paths work both on Vercel and in file:// viewers.
     document.querySelectorAll("img[data-asset]").forEach(img=>{
       const name = img.getAttribute("data-asset");
       if(name) setAssetImg(img, name);
     });
 
-    // reset gate state
     gate.classList.remove("hidden");
     gatePick.classList.remove("hidden");
     gateLoad.classList.add("hidden");
@@ -1194,7 +1254,6 @@
       btn.addEventListener("click", ()=> chooseLang(btn.dataset.lang));
     });
 
-    // initial texts (avoid flicker)
     applyLang("ru");
   });
 </script>
