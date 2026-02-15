@@ -1,68 +1,84 @@
-import net from 'net';
+import net from "net";
+import dns from "dns/promises";
 
-// Список популярных портов для сканирования (можно расширить)
-const COMMON_PORTS = [
-  21, 22, 23, 25, 53, 80, 110, 111, 135, 139, 143, 443, 445, 993, 995, 1723, 3306, 3389, 5900, 8080, 8443
-];
+const DEFAULT_TIMEOUT = 1500;
+const MAX_CONCURRENT = 50;
 
-export default async function handler(req, res) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ ok: false, error: 'Method not allowed' });
+function isValidTarget(target) {
+  const ipRegex = /^(?:\d{1,3}\.){3}\d{1,3}$/;
+  const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return ipRegex.test(target) || domainRegex.test(target);
+}
+
+async function resolveTarget(target) {
+  if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(target)) return target;
+  const res = await dns.lookup(target);
+  return res.address;
+}
+
+function scanPort(host, port, timeout) {
+  return new Promise((resolve) => {
+    const socket = new net.Socket();
+    let status = "closed";
+
+    socket.setTimeout(timeout);
+
+    socket.once("connect", () => {
+      status = "open";
+      socket.destroy();
+    });
+
+    socket.once("timeout", () => socket.destroy());
+    socket.once("error", () => {});
+    socket.once("close", () => resolve({ port, status }));
+
+    socket.connect(port, host);
+  });
+}
+
+async function scanPorts(host, ports) {
+  const results = [];
+  const queue = [...ports];
+
+  async function worker() {
+    while (queue.length) {
+      const port = queue.shift();
+      const result = await scanPort(host, port, DEFAULT_TIMEOUT);
+      results.push(result);
+    }
   }
 
+  const workers = Array.from({ length: MAX_CONCURRENT }, worker);
+  await Promise.all(workers);
+
+  return results.sort((a, b) => a.port - b.port);
+}
+
+export default async function handler(req, res) {
   try {
-    const { host, ports } = req.query;
-    if (!host) {
-      return res.status(400).json({ ok: false, error: 'Missing host parameter' });
+    const { target, ports } = req.query;
+
+    if (!target || !isValidTarget(target)) {
+      return res.status(400).json({ ok: false, error: "Invalid target" });
     }
 
-    // Если передан список портов через запятую, используем его, иначе сканируем популярные
-    let portList = COMMON_PORTS;
-    if (ports) {
-      portList = ports.split(',').map(p => parseInt(p.trim())).filter(p => !isNaN(p) && p > 0 && p < 65536);
-      if (portList.length === 0) {
-        return res.status(400).json({ ok: false, error: 'Invalid ports list' });
-      }
-    }
+    const host = await resolveTarget(target);
 
-    const openPorts = [];
-    const timeout = 2000; // таймаут на каждый порт (мс)
+    const portList = ports
+      ? ports.split(",").map(p => parseInt(p.trim(), 10)).filter(Boolean)
+      : [21,22,23,25,53,80,110,143,443,3306,8080];
 
-    // Сканируем порты последовательно, чтобы не перегружать сеть
-    for (const port of portList.slice(0, 50)) { // ограничим 50 портами за раз
-      const isOpen = await new Promise((resolve) => {
-        const socket = new net.Socket();
-        socket.setTimeout(timeout);
-        socket.once('connect', () => {
-          socket.destroy();
-          resolve(true);
-        });
-        socket.once('timeout', () => {
-          socket.destroy();
-          resolve(false);
-        });
-        socket.once('error', () => {
-          socket.destroy();
-          resolve(false);
-        });
-        socket.connect(port, host);
-      });
+    const results = await scanPorts(host, portList);
 
-      if (isOpen) {
-        openPorts.push(port);
-      }
-    }
-
-    return res.status(200).json({
+    res.status(200).json({
       ok: true,
-      data: {
-        host,
-        scanned: portList.length,
-        openPorts
-      }
+      target: host,
+      scanned: portList.length,
+      open: results.filter(r => r.status === "open").map(r => r.port),
+      results
     });
-  } catch (error) {
-    console.error('Port scanner error:', error);
-    return res.status(500).json({ ok: false, error: error.message });
+
+  } catch (e) {
+    res.status(500).json({ ok: false, error: "Scan failed" });
   }
 }
